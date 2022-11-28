@@ -22,16 +22,19 @@ public class SplatoonApi {
         if (bankaraSchedules == null || bankaraSchedules.isEmpty()) {
             return null;
         }
-        int counter= 1;
         Map<String, Object> map = new HashMap<>();
         for (Map<String, Object> node : bankaraSchedules) {
+            String startTime = (String) node.get("startTime");
+            String endTime = (String) node.get("endTime");
+            String duration = startTime + " -> " + endTime;
+            int matchNumber=0;
             List<Map<String, Object>> bankaraMatchSettingsMap = (List<Map<String, Object>>) node.get("bankaraMatchSettings");
             for(Map<String, Object> match : bankaraMatchSettingsMap)
             {
                 List<Map<String, Object>> matchStages = (List<Map<String, Object>>) match.get("vsStages");
                     for(Map<String, Object> matchStage : matchStages)
                     {
-                        map.put("" + counter++,matchStage.get("name"));
+                        map.put("UTC: "+duration + "matchNumber:"+ ++matchNumber,matchStage.get("name"));
                     }
             }
         }
