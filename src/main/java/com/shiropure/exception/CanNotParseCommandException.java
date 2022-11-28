@@ -1,6 +1,6 @@
 package com.shiropure.exception;
 
-public class CanNotParseCommandException extends  Exception{
+public class CanNotParseCommandException extends Exception {
     public CanNotParseCommandException() {
         super();
     }

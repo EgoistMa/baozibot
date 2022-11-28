@@ -3,6 +3,7 @@ package com.shiropure.utils;
 import java.util.*;
 
 public class OfUtil {
+
     @SafeVarargs
     public static<T> List<T> ofList(T... vs) {
         List<T> list = new ArrayList<>();
@@ -32,5 +33,4 @@ public class OfUtil {
         }
         return map;
     }
-
 }

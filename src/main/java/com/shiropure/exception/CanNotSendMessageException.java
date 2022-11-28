@@ -5,3 +5,4 @@ public class CanNotSendMessageException extends Exception {
         super(message);
     }
 }
+

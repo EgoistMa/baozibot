@@ -1,6 +1,7 @@
 package com.shiropure.exception;
 
-public class InsufficientPermissionsException extends  Exception{
+public class InsufficientPermissionsException extends Exception {
+
     public InsufficientPermissionsException() {
     }
 
