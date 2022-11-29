@@ -28,7 +28,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
             String content = getPlantContent(event);
             StringBuilder sb = new StringBuilder();
             if (content.startsWith(command1)) {
-                Map<String, Object> map = SplatoonApi.SplatoonSchedules();
+                Map<String, Object> map = SplatoonApi.SplatoonSchedules("bankaraSchedules");
                 if (map == null) {
                     return buildMessageChainAsSingletonList("未查询到相关数据", getQuoteReply(event));
                 }

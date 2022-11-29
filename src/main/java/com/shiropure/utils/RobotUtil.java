@@ -1,8 +1,13 @@
 package com.shiropure.utils;
 
+import com.shiropure.exception.FileUploadException;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class RobotUtil {
@@ -90,5 +95,29 @@ public class RobotUtil {
      */
     public static QuoteReply getQuoteReply(MessageEvent event) {
         return new QuoteReply(event.getMessage());
+    }
+    public static net.mamoe.mirai.message.data.Image uploadImage(MessageEvent event, URL url) throws FileUploadException {
+        return uploadImage(event.getSubject(), url);
+    }
+
+    /**
+     * 网络图片并上传至腾讯服务器
+     *
+     * @param contact 要发送的对象，仅会上传而不会实际发送
+     * @param url     网络图片 URL
+     * @return net.mamoe.mirai.message.data.Image
+     */
+    public static net.mamoe.mirai.message.data.Image uploadImage(Contact contact, URL url) throws FileUploadException {
+        try (InputStream stream = IOUtil.sendAndGetResponseStream(
+                url,
+                "GET",
+                null,
+                null
+        )) {
+            return Contact.uploadImage(contact, stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new FileUploadException("Can not upload the image from the url: " + url + ", cause by " + e.getCause().toString());
+        }
     }
 }

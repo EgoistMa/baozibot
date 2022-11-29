@@ -23,6 +23,17 @@ public class IOUtil {
     public static String sendAndGetResponseString(URL obj, String method, Map<String, String> heads, String postParam) throws IOException {
         return sendAndGetResponseString(obj, method, heads, postParam, RobotConfig.timeout);
     }
+    public static InputStream sendAndGetResponseStream(URL obj, String method, Map<String, String> heads, String postParam, long timeout) throws IOException {
+        try {
+            HttpURLConnection conn = getUrlConnection(obj, method, heads, postParam, timeout);
+            return conn.getInputStream();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    public static InputStream sendAndGetResponseStream(URL obj, String method, Map<String, String> heads, String postParam) throws IOException {
+        return sendAndGetResponseStream(obj, method, heads, postParam, RobotConfig.timeout);
+    }
     /**
      * 发送 http 请求并获取回复信息，注意回复格式必须是 json，否则该函数无法正常工作，默认的超时时间为配置所指定的
      *
