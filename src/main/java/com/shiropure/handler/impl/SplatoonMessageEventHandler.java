@@ -21,20 +21,21 @@ import java.util.*;
 @handler
 @SuppressWarnings("unchecked")
 public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
-    public final String command1 = "蛮颓比赛";
-    public final String command2 = "下次蛮颓比赛";
+    public final String command1 = "真格";
+    public final String command2 = "下次真格";
 
-    public final int ONEHOUR = 3600;
+    public final int TWOHOUR = 7200;
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
             String content = getPlantContent(event);
+            //保存蛮颓计划的数据
             Map<String, Object> map = SplatoonApi.SplatoonSchedules("bankaraSchedules");
-            if (content.startsWith(command1)) {
+            if (content.startsWith(command1)) {//当前蛮颓
                 return getBankaraSchedules(map,event,0);
             }
-            if (content.startsWith(command2)) {
-                return getBankaraSchedules(map,event,ONEHOUR * 2);
+            if (content.startsWith(command2)) {//下场蛮颓
+                return getBankaraSchedules(map,event,TWOHOUR);
             }
             return buildMessageChainAsSingletonList(getQuoteReply(event), "不可能发生" + content);
         } catch (Exception e) {
@@ -50,7 +51,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         }
         OffsetDateTime now = OffsetDateTime.now( ZoneOffset.UTC );
         String DateRegion = DateUtil.getTimeRegion(now, offset);
-        logger.info("处理时间："+ DateRegion);
+        mc.append("处理时间：UTC:"+ DateRegion + " 中国时区(UTC+8):"+ now.plusHours(8));
         for (int i = 1; i < 5; i++)
         {
             StringBuilder sb = new StringBuilder();
