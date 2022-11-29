@@ -31,7 +31,7 @@ public class RandomWeaponEventHandler extends GroupMessageEventHandler{
             List<MessageChain> ans =new ArrayList<>();
             ExternalResource res = ExternalResource.create(new File("./images/"+random+".png"));
             Image image = event.getSubject().uploadImage(res);
-            res.close(); // 记得关闭资源
+            res.close();
             ans.add(new MessageChainBuilder().append(image).build());
             return ans;
         }catch (Exception e){
