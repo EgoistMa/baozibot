@@ -1,5 +1,6 @@
 package com.shiropure.api;
 
+import com.shiropure.config.RobotConfig;
 import com.shiropure.utils.IOUtil;
 
 import java.io.IOException;
@@ -12,11 +13,17 @@ public class SplatoonApi {
     static String api = "https://splatoon3.ink/data/schedules.json";
     public static Map<String, Object> SplatoonSchedules(String mode) throws IOException {
         Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(api), "GET", null, null).get("data");
-        Map<String, Object> bankaraSchedulesMap = (Map<String, Object>)dataMap.get(mode);
-        List<Map<String, Object>> Schedules = (List<Map<String, Object>>) bankaraSchedulesMap.get("nodes");
-        return readNode(Schedules);
+        Map<String, Object> SchedulesMap = (Map<String, Object>)dataMap.get(mode);
+        List<Map<String, Object>> Schedules = (List<Map<String, Object>>) SchedulesMap.get("nodes");
+        switch (mode){
+            case "bankaraSchedules":
+                return readBankaraSchedulesNode(Schedules);
+            default:
+                return null;
+        }
+
     }
-    private static Map<String, Object> readNode(List<Map<String, Object>> Schedules) throws IOException {
+    private static Map<String, Object> readBankaraSchedulesNode(List<Map<String, Object>> Schedules) throws IOException {
         if (Schedules == null || Schedules.isEmpty()) {
             return null;
         }
@@ -27,11 +34,13 @@ public class SplatoonApi {
             List<Map<String, Object>> MatchSettingsMap = (List<Map<String, Object>>) node.get("bankaraMatchSettings");
             for(Map<String, Object> match : MatchSettingsMap)
             {
+                String gameMode = match.get("mode").toString();
+                String ruleName = ((Map<String, Object>)match.get("vsRule")).get("name").toString();
                 List<Map<String, Object>> vsStages = (List<Map<String, Object>>) match.get("vsStages");
-                    for(Map<String, Object> vsStage : vsStages)
-                    {
-                        map.put(startTime + "matchNumber:"+ ++matchNumber,vsStage.get("name"));
-                    }
+                for(Map<String, Object> vsStage : vsStages)
+                {
+                    map.put(startTime + "matchNumber:"+ ++matchNumber,vsStage.get("name").toString()+"|"+gameMode+"|"+ruleName);
+                }
             }
         }
         return map;
