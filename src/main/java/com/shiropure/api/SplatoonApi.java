@@ -17,7 +17,6 @@ public class SplatoonApi {
         List<Map<String, Object>> bankaraSchedules = (List<Map<String, Object>>) bankaraSchedulesMap.get("nodes");
         return readNode(bankaraSchedules);
     }
-    //todo 修改Map的格式 和 获取的内容 ，顺序
     private static Map<String, Object> readNode(List<Map<String, Object>> bankaraSchedules) throws IOException {
         if (bankaraSchedules == null || bankaraSchedules.isEmpty()) {
             return null;
