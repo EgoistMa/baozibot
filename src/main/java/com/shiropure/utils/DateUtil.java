@@ -16,7 +16,6 @@ public class DateUtil {
             offsetDateTime = offsetDateTime.minusHours(1);
         }
         return fmt.format(offsetDateTime);
-
     }
     public static OffsetDateTime roundingToHour(OffsetDateTime offsetDateTime)
     {
