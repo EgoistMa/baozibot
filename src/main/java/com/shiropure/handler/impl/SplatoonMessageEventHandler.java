@@ -40,6 +40,30 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     public final String HELP2 = "#HELP";
     public final String HELP3 = "#Help";
     public final int TWOHOUR = 7200;
+
+    private Set<String> keywords;
+    public SplatoonMessageEventHandler()
+    {
+        keywords = new HashSet<>(16);
+        keywords.add(ZHENGE);
+        keywords.add(NEXTZHENGE);
+        keywords.add(NEXTZHENGE2);
+        keywords.add(TUDI);
+        keywords.add(NEXTTUDI);
+        keywords.add(NEXTTUDI2);
+        keywords.add(XMODE);
+        keywords.add(XMODE2);
+        keywords.add(NEXTXMODE);
+        keywords.add(NEXTXMODE2);
+        keywords.add(NEXTXMODE3);
+        keywords.add(NEXTXMODE4);
+        keywords.add(ZUPAI);
+        keywords.add(NEXTZUPAI);
+        keywords.add(NEXTZUPAI2);
+        keywords.add(HELP);
+        keywords.add(HELP2);
+        keywords.add(HELP3);
+    }
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
@@ -141,6 +165,6 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
 
     @Override
     public boolean shouldHandle(MessageEvent event, Context ctx) {
-        return startWithKeywords(event, OfUtil.ofSet(ZHENGE, NEXTZHENGE,TUDI,NEXTTUDI,XMODE,NEXTXMODE,ZUPAI,NEXTZUPAI));
+        return startWithKeywords(event,keywords);
     }
 }
