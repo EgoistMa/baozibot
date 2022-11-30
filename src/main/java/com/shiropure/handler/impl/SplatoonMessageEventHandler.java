@@ -21,48 +21,48 @@ import java.util.*;
 @handler
 @SuppressWarnings("unchecked")
 public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
-    public final String ZHENGE = "，真格";
-    public final String NEXTZHENGE = "，下次真格";
-    public final String NEXTZHENGE2 = "，下场真格";
-    public final String TUDI = "，涂地";
-    public final String NEXTTUDI = "，下次涂地";
-    public final String NEXTTUDI2 = "，下场涂地";
-    public final String XMODE = "，x";
-    public final String XMODE2 = "，X";
-    public final String NEXTXMODE = "，下次x";
-    public final String NEXTXMODE2 = "，下场x";
-    public final String NEXTXMODE3 = "，下次x";
-    public final String NEXTXMODE4 = "，下场x";
-    public final String ZUPAI = "，组排";
-    public final String NEXTZUPAI = "，下次组排";
-    public final String NEXTZUPAI2 = "，下场组排";
-    public final String HELP = "#help";
-    public final String HELP2 = "#HELP";
-    public final String HELP3 = "#Help";
+    public final String ZHENGE = "真格";
+    public final String NEXTZHENGE = "下次真格";
+    public final String NEXTZHENGE2 = "下场真格";
+    public final String TUDI = "涂地";
+    public final String NEXTTUDI = "下次涂地";
+    public final String NEXTTUDI2 = "下场涂地";
+    public final String XMODE = "x";
+    public final String XMODE2 = "X";
+    public final String NEXTXMODE = "下次x";
+    public final String NEXTXMODE2 = "下场x";
+    public final String NEXTXMODE3 = "下次x";
+    public final String NEXTXMODE4 = "下场x";
+    public final String ZUPAI = "组排";
+    public final String NEXTZUPAI = "下次组排";
+    public final String NEXTZUPAI2 = "下场组排";
+    public final String HELP = "help";
+    public final String HELP2 = "HELP";
+    public final String HELP3 = "Help";
     public final int TWOHOUR = 7200;
 
     private Set<String> keywords;
     public SplatoonMessageEventHandler()
     {
         keywords = new HashSet<>(16);
-        keywords.add(ZHENGE);
-        keywords.add(NEXTZHENGE);
-        keywords.add(NEXTZHENGE2);
-        keywords.add(TUDI);
-        keywords.add(NEXTTUDI);
-        keywords.add(NEXTTUDI2);
-        keywords.add(XMODE);
-        keywords.add(XMODE2);
-        keywords.add(NEXTXMODE);
-        keywords.add(NEXTXMODE2);
-        keywords.add(NEXTXMODE3);
-        keywords.add(NEXTXMODE4);
-        keywords.add(ZUPAI);
-        keywords.add(NEXTZUPAI);
-        keywords.add(NEXTZUPAI2);
-        keywords.add(HELP);
-        keywords.add(HELP2);
-        keywords.add(HELP3);
+        keywords.add(formateCommand(ZHENGE));
+        keywords.add(formateCommand(NEXTZHENGE));
+        keywords.add(formateCommand(NEXTZHENGE2));
+        keywords.add(formateCommand(TUDI));
+        keywords.add(formateCommand(NEXTTUDI));
+        keywords.add(formateCommand(NEXTTUDI2));
+        keywords.add(formateCommand(XMODE));
+        keywords.add(formateCommand(XMODE2));
+        keywords.add(formateCommand(NEXTXMODE));
+        keywords.add(formateCommand(NEXTXMODE2));
+        keywords.add(formateCommand(NEXTXMODE3));
+        keywords.add(formateCommand(NEXTXMODE4));
+        keywords.add(formateCommand(ZUPAI));
+        keywords.add(formateCommand(NEXTZUPAI));
+        keywords.add(formateCommand(NEXTZUPAI2));
+        keywords.add(formateCommand(HELP));
+        keywords.add(formateCommand(HELP2));
+        keywords.add(formateCommand(HELP3));
     }
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {

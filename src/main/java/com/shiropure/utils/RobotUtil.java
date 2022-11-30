@@ -1,5 +1,6 @@
 package com.shiropure.utils;
 
+import com.shiropure.config.RobotConfig;
 import com.shiropure.exception.FileUploadException;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.events.MessageEvent;
@@ -119,5 +120,9 @@ public class RobotUtil {
             e.printStackTrace();
             throw new FileUploadException("Can not upload the image from the url: " + url + ", cause by " + e.getCause().toString());
         }
+    }
+    public String formateCommand(String cmd)
+    {
+        return RobotConfig.commandPrefix+cmd;
     }
 }
