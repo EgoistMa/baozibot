@@ -21,14 +21,24 @@ import java.util.*;
 @handler
 @SuppressWarnings("unchecked")
 public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
-    public final String ZHENGE = "真格";
-    public final String NEXTZHENGE = "下次真格";
-    public final String TUDI = "涂地";
-    public final String NEXTTUDI = "下次涂地";
-    public final String XMODE = "x模式";
-    public final String NEXTXMODE = "下次x模式";
-    public final String ZUPAI = "组排";
-    public final String NEXTZUPAI = "下次组排";
+    public final String ZHENGE = "，真格";
+    public final String NEXTZHENGE = "，下次真格";
+    public final String NEXTZHENGE2 = "，下场真格";
+    public final String TUDI = "，涂地";
+    public final String NEXTTUDI = "，下次涂地";
+    public final String NEXTTUDI2 = "，下场涂地";
+    public final String XMODE = "，x";
+    public final String XMODE2 = "，X";
+    public final String NEXTXMODE = "，下次x";
+    public final String NEXTXMODE2 = "，下场x";
+    public final String NEXTXMODE3 = "，下次x";
+    public final String NEXTXMODE4 = "，下场x";
+    public final String ZUPAI = "，组排";
+    public final String NEXTZUPAI = "，下次组排";
+    public final String NEXTZUPAI2 = "，下场组排";
+    public final String HELP = "#help";
+    public final String HELP2 = "#HELP";
+    public final String HELP3 = "#Help";
     public final int TWOHOUR = 7200;
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
@@ -38,26 +48,29 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
             if (content.startsWith(ZHENGE)) {//当前蛮颓
                 return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,0);
             }
-            if (content.startsWith(NEXTZHENGE)) {//下场蛮颓
+            if (content.startsWith(NEXTZHENGE)||content.startsWith(NEXTZHENGE2)) {//下场蛮颓
                 return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,TWOHOUR);
             }
             if(content.startsWith(TUDI)){//当前涂地模式
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,0);
             }
-            if(content.startsWith(NEXTTUDI)){//下场涂地模式
+            if(content.startsWith(NEXTTUDI)||content.startsWith(NEXTTUDI2)){//下场涂地模式
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,TWOHOUR);
             }
-            if(content.startsWith(XMODE)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(XMODE)||content.startsWith(XMODE2)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,0);
             }
-            if(content.startsWith(NEXTXMODE)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(NEXTXMODE)||content.startsWith(NEXTXMODE2)||content.startsWith(NEXTXMODE3)||content.startsWith(NEXTXMODE4)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,TWOHOUR);
             }
             if(content.startsWith(ZUPAI)){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,0);
             }
-            if(content.startsWith(NEXTZUPAI)){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(NEXTZUPAI)||content.startsWith(NEXTZUPAI2)){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,TWOHOUR);
+            }
+            if(content.startsWith(HELP)||content.startsWith(HELP2)||content.startsWith(HELP3)){
+                return getHelp();
             }
             return buildMessageChainAsSingletonList(getQuoteReply(event), "不可能发生" + content);
         } catch (Exception e) {
@@ -83,6 +96,22 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         }
         ans.add(mc.build());
 
+        return ans;
+    }
+    public  List<MessageChain> getHelp(){
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+        mc.append("馒头bot使用指南\n" +
+                "查询当前涂地:            ，涂地\n" +
+                "查询下场涂地:            ，下场(次)涂地\n" +
+                "查询当前真格挑战和开放:    ，真格\n" +
+                "查询下场真格挑战和开放:    ，下场(次)真格\n" +
+                "查询当前组排:            ，组排\n" +
+                "查询下次组排             ，下场(次)组排\n" +
+                "查询当前x赛:             ，x\n" +
+                "查询下场x赛:             ，下场(次)x\n" +
+                "随机抽取一个武器          ，");
+        ans.add(mc.build());
         return ans;
     }
     public List<MessageChain> getBankaraSchedules(Map<String, Object> map,MessageEvent event, int offset) throws MalformedURLException, FileUploadException {
