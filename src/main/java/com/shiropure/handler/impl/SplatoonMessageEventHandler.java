@@ -44,6 +44,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     private Set<String> keywords;
     public SplatoonMessageEventHandler()
     {
+        //aa
         keywords = new HashSet<>(16);
         keywords.add(formateCommand(ZHENGE));
         keywords.add(formateCommand(NEXTZHENGE));
