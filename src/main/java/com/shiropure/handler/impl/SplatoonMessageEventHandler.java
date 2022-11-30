@@ -36,9 +36,9 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     public final String ZUPAI = "组排";
     public final String NEXTZUPAI = "下次组排";
     public final String NEXTZUPAI2 = "下场组排";
-    public final String HELP = "help";
-    public final String HELP2 = "HELP";
-    public final String HELP3 = "Help";
+    public final String HELP = "#help";
+    public final String HELP2 = "#HELP";
+    public final String HELP3 = "#Help";
     public final int TWOHOUR = 7200;
 
     private Set<String> keywords;
@@ -60,9 +60,9 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         keywords.add(formateCommand(ZUPAI));
         keywords.add(formateCommand(NEXTZUPAI));
         keywords.add(formateCommand(NEXTZUPAI2));
-        keywords.add(formateCommand(HELP));
-        keywords.add(formateCommand(HELP2));
-        keywords.add(formateCommand(HELP3));
+        keywords.add(HELP);
+        keywords.add(HELP2);
+        keywords.add(HELP3);
     }
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
@@ -138,6 +138,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
                 "还在开发中项目......\n" +
                 "鲑鱼跑查询\n" +
                 "保存sw好友码\n\n" +
+                "鱿鱼须商店" +
                 "有什么需要的功能可以提，能力有限尽量qwq");
         ans.add(mc.build());
         return ans;
