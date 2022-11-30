@@ -110,7 +110,11 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
                 "查询下次组排             ，下场(次)组排\n" +
                 "查询当前x赛:             ，x\n" +
                 "查询下场x赛:             ，下场(次)x\n" +
-                "随机抽取一个武器          ，");
+                "随机抽取一个武器          ，随机武器\n\n\n" +
+                "还在开发中项目......\n" +
+                "鲑鱼跑查询\n" +
+                "保存sw好友码\n\n" +
+                "有什么需要的功能可以提，能力有限尽量qwq");
         ans.add(mc.build());
         return ans;
     }
