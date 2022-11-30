@@ -69,28 +69,28 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         try {
             String content = getPlantContent(event);
             //保存蛮颓计划的数据
-            if (content.startsWith(ZHENGE)) {//当前蛮颓
+            if (content.startsWith(formateCommand(ZHENGE))) {//当前蛮颓
                 return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,0);
             }
-            if (content.startsWith(NEXTZHENGE)||content.startsWith(NEXTZHENGE2)) {//下场蛮颓
+            if (content.startsWith(formateCommand(NEXTZHENGE))||content.startsWith(formateCommand(NEXTZHENGE2))) {//下场蛮颓
                 return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,TWOHOUR);
             }
-            if(content.startsWith(TUDI)){//当前涂地模式
+            if(content.startsWith(formateCommand(TUDI))){//当前涂地模式
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,0);
             }
-            if(content.startsWith(NEXTTUDI)||content.startsWith(NEXTTUDI2)){//下场涂地模式
+            if(content.startsWith(formateCommand(NEXTTUDI))||content.startsWith(formateCommand(NEXTTUDI2))){//下场涂地模式
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,TWOHOUR);
             }
-            if(content.startsWith(XMODE)||content.startsWith(XMODE2)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(formateCommand(XMODE))||content.startsWith(formateCommand(XMODE2))){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,0);
             }
-            if(content.startsWith(NEXTXMODE)||content.startsWith(NEXTXMODE2)||content.startsWith(NEXTXMODE3)||content.startsWith(NEXTXMODE4)){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(formateCommand(NEXTXMODE))||content.startsWith(formateCommand(NEXTXMODE2))||content.startsWith(formateCommand(NEXTXMODE3))||content.startsWith(formateCommand(NEXTXMODE4))){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,TWOHOUR);
             }
-            if(content.startsWith(ZUPAI)){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(formateCommand(ZUPAI))){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,0);
             }
-            if(content.startsWith(NEXTZUPAI)||content.startsWith(NEXTZUPAI2)){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
+            if(content.startsWith(formateCommand(NEXTZUPAI))||content.startsWith(formateCommand(NEXTZUPAI2))){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
                 return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,TWOHOUR);
             }
             if(content.startsWith(HELP)||content.startsWith(HELP2)||content.startsWith(HELP3)){
