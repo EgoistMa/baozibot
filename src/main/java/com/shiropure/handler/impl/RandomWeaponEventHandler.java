@@ -24,6 +24,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class RandomWeaponEventHandler extends GroupMessageEventHandler{
     public final String command1 = "随机武器";
+
     @Override
     public List<MessageChain> handleMessageEvent (MessageEvent event, Context ctx) {
         try {
@@ -44,7 +45,7 @@ public class RandomWeaponEventHandler extends GroupMessageEventHandler{
  }
     @Override
     public boolean shouldHandle(MessageEvent event, Context ctx) {
-        return startWithKeywords(event, OfUtil.ofSet(formateCommand(command1)));
+        return startWithKeywords(event, OfUtil.ofSet(formateCommand(command1),command1));
     }
 
 }
