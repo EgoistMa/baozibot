@@ -1,7 +1,7 @@
 package com.shiropure.utils;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 public class SplatoonUtil {
     static HashMap<String,String> stage =  new HashMap<String, String>() {
@@ -21,28 +21,11 @@ public class SplatoonUtil {
             put("Gone Fission Hydroplant", "麦年海洋发电所");
             put("Spawning Grounds", "鲑坝");
             put("Sockeye Station", "新卷堡");
+            put("Flounder Heights", "比目鱼住宅区");
+            put("Brinewater Springs", "臭鱼干温泉");
         }
     };
-    static HashMap<String,String> stageImage =  new HashMap<String, String>() {
-        {
-            put("温泉花大峡谷","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png");
-            put("鳗鲶区","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png");
-            put("烟管鱼市场","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_1.png");
-            put("竹蛏疏洪道","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png");
-            put("鱼肉碎金属","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png");
-            put("真鲭跨海大桥","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png");
-            put("金眼鲷美术馆","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png");
-            put("鬼头刀SPA度假区","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/8273118c1ffe1bf6fe031c7d8c9795dab52632c9b76e8e9f01f644ac5ae0ccc0_1.png");
-            put("海女美术大学","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_1.png");
-            put("鲟鱼造船厂","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png");
-            put("座头购物中心","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_1.png");
-            put("醋饭海洋世界","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_1.png");
-            put("麦年海洋发电所","https://splatoon3.ink/assets/splatnet/stage_img/icon/high_resolution/f1e4df4cff1dc5e0acc66a9654fecf949224f7e4f6bd36305d4600ac3fa3db7b_0.png");
-            put("鲑坝","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/be584c7c7f547b8cbac318617f646680541f88071bc71db73cd461eb3ea6326e_1.png");
-            put("新卷堡","https://splatoon3.ink/assets/splatnet/stage_img/icon/low_resolution/3418d2d89ef84288c78915b9acb63b4ad48df7bfcb48c27d6597920787e147ec_1.png");
-        }
-    };
-    static HashMap<String,String> mode =  new HashMap<String, String>() {
+    static HashMap<String,String> rule =  new HashMap<String, String>() {
         {
             put("Turf War", "占地对战");
             put("Tower Control", "真格塔楼");
@@ -51,16 +34,97 @@ public class SplatoonUtil {
             put("Clam Blitz", "真格蛤蜊");
         }
     };
+    static HashMap<String,String> weapons =  new HashMap<String, String>() {
+        {
+            put("48d6e062dd8b7efb","专业模型枪MG");
+            put("3adcc67d997a5aa8","碳纤维滚筒");
+            put("61d373353a48eb2e","爆炸泼桶");
+            put("cfcd1cb4b09dc134","喷射清洁枪");
+            put("7813d8c4d9103b07","洗笔桶");
+            put("57684fd4ee281e09","斯普拉滚筒");
+            put("7a4705bd110b0cee","满溢泡澡泼桶");
+            put("ba2b27f7c17b1632","三发猎鱼弓");
+            put("3939e000515fe04c","四重弹跳手枪 黑");
+            put("6c5bbce4a6c63d0c","开瓶喷泉枪");
+            put("39e383c2f6d1ca3e","鹦鹉螺号47");
+            put("627d43fa3ab06066","快速爆破枪");
+            put("4dc28c8d9bca2dae","斯普拉机动枪");
+            put("670ae6f0c617cca4","火热爆破枪");
+            put("9e45d86ccd5fea1e","圆珠笔");
+            put("e2b5e6b340555596","高压油管枪");
+            put("59d665d32bb4122a","窄域标记枪");
+            put("77e4f6414e5a257d","雨刷刮水刀");
+            put("2c34cb021254c8f8","顶尖射击枪");
+            put("f668bd94e7ebf62d","快速爆破枪 精英");
+            put("d3d579406dbc0fc8","专业模型枪MG");
+            put("8c157e85b75798e7","碳纤维滚筒");
+            put("6529a2c7f83ca858","爆炸泼桶");
+            put("92f330252fdd9421","喷射清洁枪");
+            put("7d97fc215efe47fa","洗笔桶");
+            put("0637f4b4225f22b8","斯普拉滚筒");
+            put("13ef7ad9ba855fe1","满溢泡澡泼桶");
+            put("7ed9dd50b97d24f3","三发猎鱼弓");
+            put("8e59d00fc471083a","四重弹跳手枪 黑");
+            put("f09bb1bb306659dd","开瓶喷泉枪");
+            put("af505e7c4bdb7888","鹦鹉螺号47");
+            put("2d3900d357e005e9","快速爆破枪");
+            put("582d03e42a63596a","斯普拉机动枪");
+            put("9208eee9ecd2026e","火热爆破枪");
+            put("cb9126ea2928b619","圆珠笔");
+            put("70aa6b216ca8f01c","高压油管枪");
+            put("41492e011c163cc1","窄域标记枪");
+            put("df5b39ea3d32b25b","雨刷刮水刀");
+            put("617dedf1c26235dc","顶尖射击枪");
+            put("83275e416e7c1bc2","快速爆破枪 精英");
+            put("1f6ce9f852641707","随机");
+            put("d9bbd083353c118d",".52加仑");
+            put("9a9dcaa55c2f6545","斯普拉射击枪");
+            put("8c0617eafedab081","14式竹筒枪·甲");
+            put("0037f260dd45e397","露营防空伞");
+            put("cf6021b669c84379","N-ZAP85");
+            put("b5c29680486b0d1c","巴勃罗");
+            put("a99a6dd8efd4d5bb","H3卷管枪");
+            put("50563f3849b68e0a","消防栓旋转枪");
+            put("1e344559d62809b2","溅镀枪");
+            put("e594a5f9535eaf40","北斋");
+            put("7a2dd4e35809d537","电动马达滚筒");
+            put("1e9e39f56c9f6d1a","鱿快洁α");
+            put("5903a8cef02e4298","开尔文525");
+            put("1208a614c4bb22cf","冲涂爆破枪");
+            put("cb1243d9c1908a38","斯普拉旋转枪");
+            put("57717b83b81f474f","公升4K");
+            put("e70b1ea70b5916be","广域标记枪");
+            put("4b6949b9e979636c","新星爆破枪");
+            put("53cefbb18bb74cb3","特工配件");
+            put("1d1dd4a9165c4a0c","斯普拉蓄力狙击枪");
+            put("97745a7307013de3","双重清洁枪");
+            put("11ba9e5928b14318","桶装旋转枪");
+            put("5615e681937a3f12","L3卷管枪");
+            put("24cab1bbfb443770","遮阳防空伞");
+            put("ab50e9ae40810698",".96加仑");
+            put("319a3174ebcb8224","新叶射击枪");
+            put("a31def86914d98ae","回旋泼桶");
+            put("afc40370eb8a1aa5","远距爆破枪");
+            put("daa5ab5b571faec5","可变式滚筒");
+            put("8f8bfbac8a43c2c7","工作刮水刀");
+            put("70e60082b7f73c24","LACT-450");
+            put("13d0d18880c2f4e4","飞溅泼桶");
+            put("66e9cd75721a942f","太空射击枪");
+            put("7f8967b3ae112ffc","宽滚筒");
+            put("a1ea7028b1bcdd28","R-PEN/5H");
+        }
+    };
+    public static String translateWeapon(String eng)
+    {
+        return weapons.getOrDefault(eng,eng);
+    }
     public static String translateStage(String eng)
     {
-        return stage.get(eng);
+        return stage.getOrDefault(eng, eng);
     }
-    public static String translateMode(String eng)
+    public static String translateRule(String eng)
     {
-        return mode.get(eng);
+        return rule.getOrDefault(eng,eng);
     }
-    public static String translateRule(String eng){ return eng.equals("CHALLENGE")? "挑战":"开放"; }
-    public static String getStageImg(String stage) {
-        return stageImage.get(stage);
-    }
+    public static String translateMode(String eng){ return eng.equals("CHALLENGE")? "挑战":"开放"; }
 }

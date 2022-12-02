@@ -1,5 +1,9 @@
 package com.shiropure.handler.impl;
 
+import com.shiropure.Model.Schedules;
+import com.shiropure.Model.SplatoonSchedules;
+import com.shiropure.Model.Stage;
+import com.shiropure.Model.Weapon;
 import com.shiropure.api.SplatoonApi;
 import com.shiropure.config.RobotConfig;
 import com.shiropure.exception.FileUploadException;
@@ -12,157 +16,243 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
-@handler
+@handler()
 @SuppressWarnings("unchecked")
 public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
-    public final String ZHENGE = "真格";
-    public final String NEXTZHENGE = "下次真格";
-    public final String NEXTZHENGE2 = "下场真格";
     public final String TUDI = "涂地";
-    public final String NEXTTUDI = "下次涂地";
-    public final String NEXTTUDI2 = "下场涂地";
+    public final String ZHENGE = "真格";
     public final String XMODE = "x";
-    public final String XMODE2 = "X";
-    public final String NEXTXMODE = "下次x";
-    public final String NEXTXMODE2 = "下场x";
-    public final String NEXTXMODE3 = "下次x";
-    public final String NEXTXMODE4 = "下场x";
     public final String ZUPAI = "组排";
-    public final String NEXTZUPAI = "下次组排";
-    public final String NEXTZUPAI2 = "下场组排";
-    public final String HELP = "#help";
-    public final String HELP2 = "#HELP";
-    public final String HELP3 = "#Help";
-    public final int TWOHOUR = 7200;
+    public final String COOP = "鲑鱼";
+    public final String HELP = "#";
 
     private Set<String> keywords;
     public SplatoonMessageEventHandler()
     {
         //aa
         keywords = new HashSet<>(16);
-        keywords.add(formateCommand(ZHENGE));
-        keywords.add(formateCommand(NEXTZHENGE));
-        keywords.add(formateCommand(NEXTZHENGE2));
         keywords.add(formateCommand(TUDI));
-        keywords.add(formateCommand(NEXTTUDI));
-        keywords.add(formateCommand(NEXTTUDI2));
+        keywords.add(formateCommand(ZHENGE));
         keywords.add(formateCommand(XMODE));
-        keywords.add(formateCommand(XMODE2));
-        keywords.add(formateCommand(NEXTXMODE));
-        keywords.add(formateCommand(NEXTXMODE2));
-        keywords.add(formateCommand(NEXTXMODE3));
-        keywords.add(formateCommand(NEXTXMODE4));
         keywords.add(formateCommand(ZUPAI));
-        keywords.add(formateCommand(NEXTZUPAI));
-        keywords.add(formateCommand(NEXTZUPAI2));
+        keywords.add(formateCommand(COOP));
         keywords.add(HELP);
-        keywords.add(HELP2);
-        keywords.add(HELP3);
     }
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
+            logger.info("message handled by baoziBot");
+            SplatoonSchedules schedules = SplatoonApi.SplatoonSchedules();
             String content = getPlantContent(event);
-            //保存蛮颓计划的数据
-            if (content.startsWith(formateCommand(ZHENGE))) {//当前蛮颓
-                return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,0);
+            if(content.startsWith(formateCommand(TUDI))) {
+                logger.info("涂地模式查询");
+                return tuDI(event,schedules);
             }
-            if (content.startsWith(formateCommand(NEXTZHENGE))||content.startsWith(formateCommand(NEXTZHENGE2))) {//下场蛮颓
-                return getBankaraSchedules(SplatoonApi.SplatoonSchedules("bankaraSchedules"),event,TWOHOUR);
+            if(content.startsWith(formateCommand(ZHENGE))) {
+                logger.info("真格模式查询");
+                return zhenGe(event,schedules);
             }
-            if(content.startsWith(formateCommand(TUDI))){//当前涂地模式
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,0);
+            if(content.startsWith(formateCommand(XMODE))) {
+                logger.info("X模式查询");
+                return XMoShi(event,schedules);
             }
-            if(content.startsWith(formateCommand(NEXTTUDI))||content.startsWith(formateCommand(NEXTTUDI2))){//下场涂地模式
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("regularSchedules"),event,TWOHOUR);
+            if(content.startsWith(formateCommand(ZUPAI))) {
+                logger.info("组排模式查询");
+                return zuPai(event,schedules);
             }
-            if(content.startsWith(formateCommand(XMODE))||content.startsWith(formateCommand(XMODE2))){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,0);
+            if(content.startsWith(formateCommand(COOP))) {
+                logger.info("鲑鱼跑模式查询");
+                return coop(event,schedules);
             }
-            if(content.startsWith(formateCommand(NEXTXMODE))||content.startsWith(formateCommand(NEXTXMODE2))||content.startsWith(formateCommand(NEXTXMODE3))||content.startsWith(formateCommand(NEXTXMODE4))){//下场涂地模式   X模式 和 涂地模式一样.偷懒 复用代码了
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("xSchedules"),event,TWOHOUR);
+            if(content.startsWith(HELP))
+            {
+                logger.info("帮助查询");
+                return getHelp(event);
             }
-            if(content.startsWith(formateCommand(ZUPAI))){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,0);
-            }
-            if(content.startsWith(formateCommand(NEXTZUPAI))||content.startsWith(formateCommand(NEXTZUPAI2))){//下场涂地模式   组排模式 和 涂地模式一样.偷懒 复用代码了
-                return getRegularSchedules(SplatoonApi.SplatoonSchedules("leagueSchedules"),event,TWOHOUR);
-            }
-            if(content.startsWith(HELP)||content.startsWith(HELP2)||content.startsWith(HELP3)){
-                return getHelp();
-            }
-            return buildMessageChainAsSingletonList(getQuoteReply(event), "不可能发生" + content);
+
         } catch (Exception e) {
             logError(event, e);
             return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：" + e.getMessage());
         }
+        return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：not implement error");
     }
-    public List<MessageChain> getRegularSchedules(Map<String, Object> map,MessageEvent event, int offset) throws MalformedURLException, FileUploadException {
+    public List<MessageChain> coop(MessageEvent event,SplatoonSchedules schedules) throws IOException, FileUploadException {
+        //子指令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(COOP).length()).trim();
+        int offset = subCommand.length()-1;
+        //返回消息构造器
         List<MessageChain> ans = new ArrayList<>();
-        MessageChainBuilder mc= new MessageChainBuilder();
-        if (map == null) {
-            return buildMessageChainAsSingletonList("未查询到相关数据", getQuoteReply(event));
-        }
-        OffsetDateTime now = OffsetDateTime.now( ZoneOffset.UTC );
-        String DateRegion = DateUtil.getTimeRegion(now, offset);
-        //mc.append("处理时间：UTC:"+ DateRegion + " 中国时区(UTC+8):"+ now.plusHours(8)+"\n");
-        for (int i = 1; i < 3; i++)
+        //根据subcommand 获取offset
+        for(Schedules schedules1 : schedules.coopGroupingSchedule)
         {
+            MessageChainBuilder mc= new MessageChainBuilder();
             StringBuilder sb = new StringBuilder();
-            String eng[] = map.get(DateRegion+"matchNumber:"+i).toString().split("\\|");
-            sb.append(SplatoonUtil.translateStage(eng[0]) +"\t"+ "<"+ SplatoonUtil.translateMode(eng[1])+">" +"\n");
-            mc.append(sb.toString()).append(uploadImage(event,new URL(SplatoonUtil.getStageImg(SplatoonUtil.translateStage(eng[0])))));
+            sb.append(DateUtil.getReadableChinaTime(schedules1.startTime)).append(" -> ").append(DateUtil.getReadableChinaTime(schedules1.endTime)).append("\n");
+            mc.append(sb.toString());
+            sb.delete(0,sb.length());
+            Stage stage = schedules1.stages[0];
+            sb.append(SplatoonUtil.translateStage(stage.stageName));
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+            sb.delete(0,sb.length());
+            sb.append("武器：\n");
+            for(Weapon weapon : schedules1.weapons)
+            {
+                sb.append(SplatoonUtil.translateWeapon(weapon.getWeaponName())).append("\t");
+            }
+            mc.append(sb.toString());
+            sb.delete(0,sb.length());
+            for(Weapon weapon : schedules1.weapons)
+            {
+                mc.append(uploadImage(event,new URL(weapon.getWeaponUrl())));
+            }
+            ans.add(mc.build());
         }
-        ans.add(mc.build());
+        return ans;
+    }
+    public List<MessageChain> zuPai(MessageEvent event,SplatoonSchedules schedules) throws IOException, FileUploadException {
+        //子指令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(ZUPAI).length()).trim();
+        int offset = subCommand.length()-1;
+        //返回消息构造器
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+        StringBuilder sb = new StringBuilder();
+        //根据subcommand 获取offset
+        int index = Math.max(offset, 0);
 
-        return ans;
-    }
-    public  List<MessageChain> getHelp(){
-        List<MessageChain> ans = new ArrayList<>();
-        MessageChainBuilder mc= new MessageChainBuilder();
-        mc.append("馒头bot使用指南\n" +
-                "查询当前涂地:            ，涂地\n" +
-                "查询下场涂地:            ，下场(次)涂地\n" +
-                "查询当前真格挑战和开放:    ，真格\n" +
-                "查询下场真格挑战和开放:    ，下场(次)真格\n" +
-                "查询当前组排:            ，组排\n" +
-                "查询下次组排             ，下场(次)组排\n" +
-                "查询当前x赛:             ，x\n" +
-                "查询下场x赛:             ，下场(次)x\n" +
-                "随机抽取一个武器          ，随机武器\n\n\n" +
-                "还在开发中项目......\n" +
-                "鲑鱼跑查询\n" +
-                "鱿鱼须商店\n" +
-                "保存sw好友码\n\n" +
-                "有什么需要的功能可以提，能力有限尽量qwq");
-        ans.add(mc.build());
-        return ans;
-    }
-    public List<MessageChain> getBankaraSchedules(Map<String, Object> map,MessageEvent event, int offset) throws MalformedURLException, FileUploadException {
-        List<MessageChain> ans = new ArrayList<>();
-        MessageChainBuilder mc= new MessageChainBuilder();
-        if (map == null) {
-            return buildMessageChainAsSingletonList("未查询到相关数据", getQuoteReply(event));
-        }
-        OffsetDateTime now = OffsetDateTime.now( ZoneOffset.UTC );
-        String DateRegion = DateUtil.getTimeRegion(now, offset);
-        //mc.append("处理时间：UTC:"+ DateRegion + " 中国时区(UTC+8):"+ now.plusHours(8)+"\n");
-        for (int i = 1; i < 5; i++)
+        sb.append(DateUtil.getReadableChinaTime(schedules.leagueSchedules[index].startTime)).append(" -> ").append(DateUtil.getReadableChinaTime(schedules.leagueSchedules[index].endTime)).append("\n");
+        mc.append(sb.toString());
+        String rule = SplatoonUtil.translateRule(schedules.leagueSchedules[index].getRule());
+        for(Stage stage : schedules.leagueSchedules[index].stages)
         {
-            StringBuilder sb = new StringBuilder();
-            String eng[] = map.get(DateRegion+"matchNumber:"+i).toString().split("\\|");
-            sb.append(SplatoonUtil.translateStage(eng[0]) +"\t\t"+"<"+ SplatoonUtil.translateRule(eng[1])+">" +"\t"+ "<"+ SplatoonUtil.translateMode(eng[2])+">" +"\n");
-            mc.append(sb.toString()).append(uploadImage(event,new URL(SplatoonUtil.getStageImg(SplatoonUtil.translateStage(eng[0])))));
+            sb.delete(0,sb.length());
+            sb.append(SplatoonUtil.translateStage(stage.stageName)).append("<").append(rule).append(">");
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
         }
         ans.add(mc.build());
-
         return ans;
+    }
+    public List<MessageChain> XMoShi(MessageEvent event,SplatoonSchedules schedules) throws IOException, FileUploadException {
+        //子指令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(XMODE).length()).trim();
+        int offset = subCommand.length()-1;
+        //返回消息构造器
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+        StringBuilder sb = new StringBuilder();
+        //根据subcommand 获取offset
+        int index = Math.max(offset, 0);
+
+        sb.append(DateUtil.getReadableChinaTime(schedules.xSchedules[index].startTime)).append(" -> ").append(DateUtil.getReadableChinaTime(schedules.xSchedules[index].endTime)).append("\n");
+        mc.append(sb.toString());
+        String rule = SplatoonUtil.translateRule(schedules.xSchedules[index].getRule());
+        for(Stage stage : schedules.xSchedules[index].stages)
+        {
+            sb.delete(0,sb.length());
+            sb.append(SplatoonUtil.translateStage(stage.stageName)).append("<").append(rule).append(">");
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+        }
+        ans.add(mc.build());
+        return ans;
+    }
+    public List<MessageChain> zhenGe(MessageEvent event,SplatoonSchedules schedules) throws IOException, FileUploadException {
+        //子指令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(ZHENGE).length()).trim();
+        int offset = subCommand.length()-1;
+        //返回消息构造器
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+        StringBuilder sb = new StringBuilder();
+        //根据subcommand 获取offset
+        int index = 2*Math.max(offset, 0);
+
+        sb.append(DateUtil.getReadableChinaTime(schedules.bankaraSchedules[index].startTime)+" -> "+DateUtil.getReadableChinaTime(schedules.bankaraSchedules[index].endTime) +"\n");
+        mc.append(sb.toString());
+        String rule = SplatoonUtil.translateRule(schedules.bankaraSchedules[index].getRule());
+        String mode = SplatoonUtil.translateMode(schedules.bankaraSchedules[index].getMode());
+        for(Stage stage : schedules.bankaraSchedules[index].stages)
+        {
+            sb.delete(0,sb.length());
+            sb.append(SplatoonUtil.translateStage(stage.stageName)).append("<"+rule+">").append("<"+mode+">");
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+        }
+        String rule2 = SplatoonUtil.translateRule(schedules.bankaraSchedules[index+1].getRule());
+        String mode2 = SplatoonUtil.translateMode(schedules.bankaraSchedules[index+1].getMode());
+        ans.add(mc.build());
+        mc.clear();
+        for(Stage stage : schedules.bankaraSchedules[index+1].stages)
+        {
+            sb.delete(0,sb.length());
+            sb.append(SplatoonUtil.translateStage(stage.stageName)).append("<"+rule2+">").append("<"+mode2+">");
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+        }
+        ans.add(mc.build());
+        return ans;
+    }
+    public List<MessageChain> tuDI(MessageEvent event,SplatoonSchedules schedules) throws IOException, FileUploadException {
+        //子指令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(TUDI).length()).trim();
+        int offset = subCommand.length()-1;
+        //返回消息构造器
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+        StringBuilder sb = new StringBuilder();
+        //根据subcommand 获取offset
+        int index = Math.max(offset, 0);
+
+        sb.append(DateUtil.getReadableChinaTime(schedules.regularSchedules[index].startTime)+" -> "+DateUtil.getReadableChinaTime(schedules.regularSchedules[index].endTime) +"\n");
+        mc.append(sb.toString());
+        String rule = SplatoonUtil.translateRule(schedules.regularSchedules[index].getRule());
+        for(Stage stage : schedules.regularSchedules[index].stages)
+        {
+            sb.delete(0,sb.length());
+            sb.append(SplatoonUtil.translateStage(stage.stageName)).append("<"+rule+">");
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+        }
+        ans.add(mc.build());
+        return ans;
+    }
+    public  List<MessageChain> getHelp(MessageEvent event){
+        //获取子命令
+        String content = getPlantContent(event);
+        String subCommand = content.substring(formateCommand(HELP).length()).trim();
+        subCommand = subCommand.toUpperCase();
+        //回复消息构造器
+        List<MessageChain> ans = new ArrayList<>();
+        MessageChainBuilder mc= new MessageChainBuilder();
+       if(subCommand.equals("HELP"))
+       {
+           mc.append(
+                   "馒头bot使用指南\n" +
+                           "查询当前涂地:            ，涂地 （下次）（下下次）...\n" +
+                           "查询当前真格挑战和开放:    ，真格（下次）（下下次）...\n" +
+                           "查询当前组排:            ，组排 （下次）（下下次）...\n" +
+                           "查询全部x赛:             ，x （下次）（下下次）...\n" +
+                           "查询鲑鱼跑 :             ，鲑鱼\n" +
+                           "随机抽取一个武器          ，随机武器\n" +
+                           "\n" +
+                           "\n" +
+                           "还在开发中项目......\n" +
+                           "\n" +
+                           "鱿鱼须商店\n" +
+                           "保存sw好友码\n" +
+                           "\n" +
+                           "有什么需要的功能可以提，能力有限尽量qwq\n");
+           ans.add(mc.build());
+           return ans;
+       }else{
+           logger.info("未知的子命令， 忽略消息，请尝试 #help");
+           return null;
+       }
     }
 
     @Override

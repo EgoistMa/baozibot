@@ -1,71 +1,170 @@
 package com.shiropure.api;
 
+import com.shiropure.Model.Schedules;
+import com.shiropure.Model.SplatoonSchedules;
+import com.shiropure.Model.Stage;
+import com.shiropure.Model.Weapon;
+import com.shiropure.utils.DateUtil;
 import com.shiropure.utils.IOUtil;
+import com.shiropure.utils.SplatoonApiUtil;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class SplatoonApi {
-    static String api = "https://splatoon3.ink/data/schedules.json";
-    public static Map<String, Object> SplatoonSchedules(String mode) throws IOException {
-        Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(api), "GET", null, null).get("data");
-        Map<String, Object> SchedulesMap = (Map<String, Object>)dataMap.get(mode);
-        List<Map<String, Object>> Schedules = (List<Map<String, Object>>) SchedulesMap.get("nodes");
-        switch (mode){
-            case "bankaraSchedules":
-                return readBankaraSchedulesNode(Schedules);
-            case "regularSchedules":
-                return readRegularSchedulesNode(Schedules,"regularMatchSetting");
-            case "xSchedules":
-                return readRegularSchedulesNode(Schedules,"xMatchSetting");
-            case "leagueSchedules":
-                return readRegularSchedulesNode(Schedules,"leagueMatchSetting");
-            default:
-                return null;
-        }
+    static String schedulesApi = "https://splatoon3.ink/data/schedules.json";
+    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+    public static SplatoonSchedules SplatoonSchedules() throws IOException
+    {
+        Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(schedulesApi), "GET", null, null).get("data");
+        Schedules[] regularSchedules = readRegularSchedules(dataMap);
+        Schedules[] bankaraSchedules = readBankaraSchedules(dataMap);
+        Schedules[] xSchedules = readXSchedules(dataMap);
+        Schedules[] leagueSchedules = readLeagueSchedules(dataMap);
+        Schedules[] coopGroupingSchedule = readCoopSchedules(dataMap);
+        SplatoonSchedules SplatoonSchedules = new SplatoonSchedules(regularSchedules,bankaraSchedules,xSchedules,leagueSchedules,coopGroupingSchedule);
+        return SplatoonSchedules;
     }
-    private static Map<String, Object> readRegularSchedulesNode(List<Map<String, Object>> schedules, String matchSetting) throws IOException {
-        if (schedules == null || schedules.isEmpty()) {
-            return null;
-        }
-        Map<String, Object> map = new HashMap<>();
-        for (Map<String, Object> node : schedules) {
-            String startTime = (String) node.get("startTime");
-            int matchNumber=0;
-            Map<String, Object> MatchSettingsMap = (Map<String, Object>) node.get(matchSetting);
-            String ruleName = ((Map<String, Object>)MatchSettingsMap.get("vsRule")).get("name").toString();
-            List<Map<String, Object>> vsStages = (List<Map<String, Object>>) MatchSettingsMap.get("vsStages");
-            for(Map<String, Object> vsStage : vsStages)
+    public static Schedules[] readCoopSchedules(Map<String, Object> dataMap) throws IOException
+    {
+        LinkedList<Schedules>schedules = new LinkedList<>();
+        Map<String, Object> leagueSchedules = SplatoonApiUtil.openNode(dataMap,"coopGroupingSchedule");
+        Map<String, Object> regularSchedules = SplatoonApiUtil.openNode(leagueSchedules,"regularSchedules");
+        List<Map<String, Object>> nodes = SplatoonApiUtil.openNodeList(regularSchedules,"nodes");
+        for(Map<String, Object> node : nodes)
+        {
+            OffsetDateTime startTime = DateUtil.dateFormatter(node.get("startTime").toString(),dateTimeFormatter);
+            OffsetDateTime endTime = DateUtil.dateFormatter(node.get("endTime").toString(),dateTimeFormatter);
+            Map<String, Object> setting = SplatoonApiUtil.openNode(node,"setting");
+            Map<String, Object> coopStage = SplatoonApiUtil.openNode(setting,"coopStage");
+            LinkedList<Stage> stages = new LinkedList<>();
+            String stageName = coopStage.get("name").toString();
+            Map<String, Object> image = SplatoonApiUtil.openNode(coopStage,"image");
+            String stageUrl = image.get("url").toString();
+            stages.addLast(new Stage(stageName,stageUrl));
+            //获取武器
+            LinkedList<Weapon> weapons = new LinkedList<>();
+            List<Map<String, Object>> weaponsNode = SplatoonApiUtil.openNodeList(setting,"weapons");
+            for(Map<String, Object> weapon :weaponsNode)
             {
-                map.put(startTime + "matchNumber:"+ ++matchNumber,vsStage.get("name").toString()+"|"+ruleName);
+                String weaponName = weapon.get("name").toString();
+                Map<String, Object> weaponImage = SplatoonApiUtil.openNode(weapon,"image");
+                String weaponUrl = weaponImage.get("url").toString();
+                weapons.addLast(new Weapon(weaponName,weaponUrl));
             }
+            schedules.addLast(new Schedules(startTime,endTime,stages.toArray(new Stage[0]),weapons.toArray(new Weapon[0])));
         }
-        return map;
+        return schedules.toArray(new Schedules[0]);
     }
-    private static Map<String, Object> readBankaraSchedulesNode(List<Map<String, Object>> Schedules) throws IOException {
-        if (Schedules == null || Schedules.isEmpty()) {
-            return null;
-        }
-        Map<String, Object> map = new HashMap<>();
-        for (Map<String, Object> node : Schedules) {
-            String startTime = (String) node.get("startTime");
-            int matchNumber=0;
-            List<Map<String, Object>> MatchSettingsMap = (List<Map<String, Object>>) node.get("bankaraMatchSettings");
-            for(Map<String, Object> match : MatchSettingsMap)
+    public static Schedules[] readLeagueSchedules (Map<String, Object> dataMap)
+    {
+        LinkedList<Schedules>schedules = new LinkedList<>();
+        Map<String, Object> leagueSchedules = SplatoonApiUtil.openNode(dataMap,"leagueSchedules");
+        List<Map<String, Object>> nodes = SplatoonApiUtil.openNodeList(leagueSchedules,"nodes");
+        for(Map<String, Object> node : nodes)
+        {
+            OffsetDateTime startTime = DateUtil.dateFormatter(node.get("startTime").toString(),dateTimeFormatter);
+            OffsetDateTime endTime = DateUtil.dateFormatter(node.get("endTime").toString(),dateTimeFormatter);
+            Map<String, Object> leagueMatchSetting = SplatoonApiUtil.openNode(node,"leagueMatchSetting");
+            List<Map<String, Object>> vsStages = SplatoonApiUtil.openNodeList(leagueMatchSetting,"vsStages");
+            LinkedList<Stage> stages = new LinkedList<>();
+            for(Map<String, Object> stage : vsStages)
             {
-                String gameMode = match.get("mode").toString();
-                String ruleName = ((Map<String, Object>)match.get("vsRule")).get("name").toString();
-                List<Map<String, Object>> vsStages = (List<Map<String, Object>>) match.get("vsStages");
-                for(Map<String, Object> vsStage : vsStages)
+                String stageName = stage.get("name").toString();
+                Map<String, Object> image = SplatoonApiUtil.openNode(stage,"image");
+                String stageUrl = image.get("url").toString();
+                stages.addLast(new Stage(stageName,stageUrl));
+            }
+            Map<String, Object> vsRule = SplatoonApiUtil.openNode(leagueMatchSetting,"vsRule");
+            String rule = vsRule.get("name").toString();
+            schedules.addLast(new Schedules(startTime,endTime,stages.toArray(new Stage[0]),rule));
+
+        }
+        return schedules.toArray(new Schedules[0]);
+    }
+    public static Schedules[] readXSchedules (Map<String, Object> dataMap)
+    {
+        LinkedList<Schedules>schedules = new LinkedList<>();
+        Map<String, Object> xSchedules = SplatoonApiUtil.openNode(dataMap,"xSchedules");
+        List<Map<String, Object>> nodes = SplatoonApiUtil.openNodeList(xSchedules,"nodes");
+        for(Map<String, Object> node : nodes)
+        {
+            OffsetDateTime startTime = DateUtil.dateFormatter(node.get("startTime").toString(),dateTimeFormatter);
+            OffsetDateTime endTime = DateUtil.dateFormatter(node.get("endTime").toString(),dateTimeFormatter);
+            Map<String, Object> xMatchSetting = SplatoonApiUtil.openNode(node,"xMatchSetting");
+            List<Map<String, Object>> vsStages = SplatoonApiUtil.openNodeList(xMatchSetting,"vsStages");
+            LinkedList<Stage> stages = new LinkedList<>();
+            for(Map<String, Object> stage : vsStages)
+            {
+                String stageName = stage.get("name").toString();
+                Map<String, Object> image = SplatoonApiUtil.openNode(stage,"image");
+                String stageUrl = image.get("url").toString();
+                stages.addLast(new Stage(stageName,stageUrl));
+            }
+            Map<String, Object> vsRule = SplatoonApiUtil.openNode(xMatchSetting,"vsRule");
+            String rule = vsRule.get("name").toString();
+            schedules.addLast(new Schedules(startTime,endTime,stages.toArray(new Stage[0]),rule));
+        }
+        return schedules.toArray(new Schedules[0]);
+    }
+    public static Schedules[] readBankaraSchedules (Map<String, Object> dataMap)
+    {
+        LinkedList<Schedules>schedules = new LinkedList<>();
+        Map<String, Object> bankaraSchedules = SplatoonApiUtil.openNode(dataMap,"bankaraSchedules");
+        List<Map<String, Object>> nodes = SplatoonApiUtil.openNodeList(bankaraSchedules,"nodes");
+        for(Map<String, Object> node : nodes)
+        {
+            OffsetDateTime startTime = DateUtil.dateFormatter(node.get("startTime").toString(),dateTimeFormatter);
+            OffsetDateTime endTime = DateUtil.dateFormatter(node.get("endTime").toString(),dateTimeFormatter);
+            List<Map<String, Object>> regularMatchSetting = SplatoonApiUtil.openNodeList(node,"bankaraMatchSettings");
+            for(Map<String, Object> setting:regularMatchSetting)
+            {
+                List<Map<String, Object>> vsStages = SplatoonApiUtil.openNodeList(setting,"vsStages");
+                LinkedList<Stage> stages = new LinkedList<>();
+                for(Map<String, Object> stage : vsStages)
                 {
-                    map.put(startTime + "matchNumber:"+ ++matchNumber,vsStage.get("name").toString()+"|"+gameMode+"|"+ruleName);
+                    String stageName = stage.get("name").toString();
+                    Map<String, Object> image = SplatoonApiUtil.openNode(stage,"image");
+                    String stageUrl = image.get("url").toString();
+                    stages.addLast(new Stage(stageName,stageUrl));
                 }
+                Map<String, Object> vsRule = SplatoonApiUtil.openNode(setting,"vsRule");
+                String rule = vsRule.get("name").toString();
+                String mode = setting.get("mode").toString();
+                schedules.addLast(new Schedules(startTime,endTime,stages.toArray(new Stage[0]),rule,mode));
             }
         }
-        return map;
+        return schedules.toArray(new Schedules[0]);
+    }
+    public static Schedules[] readRegularSchedules (Map<String, Object> dataMap)
+    {
+        LinkedList<Schedules>schedules = new LinkedList<>();
+        Map<String, Object> regularSchedules = SplatoonApiUtil.openNode(dataMap,"regularSchedules");
+        List<Map<String, Object>> nodes = SplatoonApiUtil.openNodeList(regularSchedules,"nodes");
+        for(Map<String, Object> node : nodes)
+        {
+            OffsetDateTime startTime = DateUtil.dateFormatter(node.get("startTime").toString(),dateTimeFormatter);
+            OffsetDateTime endTime = DateUtil.dateFormatter(node.get("endTime").toString(),dateTimeFormatter);
+            Map<String, Object> regularMatchSetting = SplatoonApiUtil.openNode(node,"regularMatchSetting");
+            List<Map<String, Object>> vsStages = SplatoonApiUtil.openNodeList(regularMatchSetting,"vsStages");
+            LinkedList<Stage> stages = new LinkedList<>();
+            for(Map<String, Object> stage : vsStages)
+            {
+                String stageName = stage.get("name").toString();
+                Map<String, Object> image = SplatoonApiUtil.openNode(stage,"image");
+                String stageUrl = image.get("url").toString();
+                stages.addLast(new Stage(stageName,stageUrl));
+            }
+            Map<String, Object> vsRule = SplatoonApiUtil.openNode(regularMatchSetting,"vsRule");
+            String rule = vsRule.get("name").toString();
+            schedules.addLast(new Schedules(startTime,endTime,stages.toArray(new Stage[0]),rule));
+        }
+        return schedules.toArray(new Schedules[0]);
     }
 }
