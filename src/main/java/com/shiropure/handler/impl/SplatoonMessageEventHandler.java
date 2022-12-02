@@ -27,7 +27,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     public final String ZHENGE = "真格";
     public final String XMODE = "x";
     public final String ZUPAI = "组排";
-    public final String COOP = "鲑鱼";
+    public final String COOP = "打工";
     public final String HELP = "#";
 
     private Set<String> keywords;
@@ -224,12 +224,12 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     public  List<MessageChain> getHelp(MessageEvent event){
         //获取子命令
         String content = getPlantContent(event);
-        String subCommand = content.substring(formateCommand(HELP).length()).trim();
+        String subCommand = content.substring(HELP.length()).trim();
         subCommand = subCommand.toUpperCase();
         //回复消息构造器
         List<MessageChain> ans = new ArrayList<>();
         MessageChainBuilder mc= new MessageChainBuilder();
-        logger.info(subCommand);
+        //logger.info(subCommand);
        if(subCommand.equals("HELP") || subCommand.equals("帮助"))
        {
            mc.append(
@@ -238,7 +238,7 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
                            "查询当前真格挑战和开放:    ，真格（下次）（下下次）...\n" +
                            "查询当前组排:            ，组排 （下次）（下下次）...\n" +
                            "查询全部x赛:             ，x （下次）（下下次）...\n" +
-                           "查询鲑鱼跑 :             ，鲑鱼\n" +
+                           "查询鲑鱼跑 :             ，打工\n" +
                            "随机抽取一个武器          ，随机武器\n" +
                            "\n" +
                            "\n" +
