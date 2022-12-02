@@ -229,7 +229,8 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         //回复消息构造器
         List<MessageChain> ans = new ArrayList<>();
         MessageChainBuilder mc= new MessageChainBuilder();
-       if(subCommand.equals("HELP"))
+        logger.info(subCommand);
+       if(subCommand.equals("HELP") || subCommand.equals("帮助"))
        {
            mc.append(
                    "馒头bot使用指南\n" +
