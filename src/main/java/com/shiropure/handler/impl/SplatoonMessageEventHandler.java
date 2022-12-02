@@ -89,6 +89,28 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
         //根据subcommand 获取处理
         if(subCommand.equals(""))
         {
+            MessageChainBuilder mc= new MessageChainBuilder();
+            StringBuilder sb = new StringBuilder();
+            sb.append(DateUtil.getReadableChinaTime(schedules.coopGroupingSchedule[0].startTime)).append(" -> ").append(DateUtil.getReadableChinaTime(schedules.coopGroupingSchedule[0].endTime)).append("\n");
+            mc.append(sb.toString());
+            sb.delete(0,sb.length());
+            Stage stage = schedules.coopGroupingSchedule[0].stages[0];
+            sb.append(SplatoonUtil.translateStage(stage.stageName));
+            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
+            sb.delete(0,sb.length());
+            sb.append("武器：\n");
+            for(Weapon weapon : schedules.coopGroupingSchedule[0].weapons)
+            {
+                sb.append(SplatoonUtil.translateWeapon(weapon.getWeaponName())).append("\t");
+            }
+            mc.append(sb.toString());
+            sb.delete(0,sb.length());
+            for(Weapon weapon : schedules.coopGroupingSchedule[0].weapons)
+            {
+                mc.append(uploadImage(event,new URL(weapon.getWeaponUrl())));
+            }
+            ans.add(mc.build());
+        }else {
             for(Schedules schedules1 : schedules.coopGroupingSchedule)
             {
                 MessageChainBuilder mc= new MessageChainBuilder();
@@ -113,28 +135,6 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
                 }
                 ans.add(mc.build());
             }
-        }else {
-            MessageChainBuilder mc= new MessageChainBuilder();
-            StringBuilder sb = new StringBuilder();
-            sb.append(DateUtil.getReadableChinaTime(schedules.coopGroupingSchedule[0].startTime)).append(" -> ").append(DateUtil.getReadableChinaTime(schedules.coopGroupingSchedule[0].endTime)).append("\n");
-            mc.append(sb.toString());
-            sb.delete(0,sb.length());
-            Stage stage = schedules.coopGroupingSchedule[0].stages[0];
-            sb.append(SplatoonUtil.translateStage(stage.stageName));
-            mc.append(sb.toString()).append(uploadImage(event,new URL(stage.stageUrl)));
-            sb.delete(0,sb.length());
-            sb.append("武器：\n");
-            for(Weapon weapon : schedules.coopGroupingSchedule[0].weapons)
-            {
-                sb.append(SplatoonUtil.translateWeapon(weapon.getWeaponName())).append("\t");
-            }
-            mc.append(sb.toString());
-            sb.delete(0,sb.length());
-            for(Weapon weapon : schedules.coopGroupingSchedule[0].weapons)
-            {
-                mc.append(uploadImage(event,new URL(weapon.getWeaponUrl())));
-            }
-            ans.add(mc.build());
         }
         return ans;
     }
