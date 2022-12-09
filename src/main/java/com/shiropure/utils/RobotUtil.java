@@ -125,4 +125,8 @@ public class RobotUtil {
     {
         return RobotConfig.commandPrefix+cmd;
     }
+    public String stringFormateCommand(String cmd)
+    {
+        return RobotConfig.stringCommandPrefix+cmd;
+    }
 }

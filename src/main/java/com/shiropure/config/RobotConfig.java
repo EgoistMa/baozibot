@@ -11,6 +11,7 @@ public class RobotConfig {
     public static Boolean enableRobot = true;
     public volatile static MiraiLogger logger;
     public static String commandPrefix = "，";
+    public static String stringCommandPrefix = "。";
     public volatile static boolean enableAt = true;
     public static List<String> include = new ArrayList<>();
     public static List<String> exclude = new ArrayList<>();

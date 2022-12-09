@@ -35,11 +35,11 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     {
         //aa
         keywords = new HashSet<>(16);
-        keywords.add(formateCommand(TUDI));
-        keywords.add(formateCommand(ZHENGE));
-        keywords.add(formateCommand(XMODE));
-        keywords.add(formateCommand(ZUPAI));
-        keywords.add(formateCommand(COOP));
+        keywords.add(stringFormateCommand(TUDI));
+        keywords.add(stringFormateCommand(ZHENGE));
+        keywords.add(stringFormateCommand(XMODE));
+        keywords.add(stringFormateCommand(ZUPAI));
+        keywords.add(stringFormateCommand(COOP));
         keywords.add(HELP);
     }
     @Override
@@ -48,23 +48,23 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
             logger.info("message handled by baoziBot");
             SplatoonSchedules schedules = SplatoonApi.SplatoonSchedules();
             String content = getPlantContent(event);
-            if(content.startsWith(formateCommand(TUDI))) {
+            if(content.startsWith(stringFormateCommand(TUDI))) {
                 logger.info("涂地模式查询");
                 return tuDI(event,schedules);
             }
-            if(content.startsWith(formateCommand(ZHENGE))) {
+            if(content.startsWith(stringFormateCommand(ZHENGE))) {
                 logger.info("真格模式查询");
                 return zhenGe(event,schedules);
             }
-            if(content.startsWith(formateCommand(XMODE))) {
+            if(content.startsWith(stringFormateCommand(XMODE))) {
                 logger.info("X模式查询");
                 return XMoShi(event,schedules);
             }
-            if(content.startsWith(formateCommand(ZUPAI))) {
+            if(content.startsWith(stringFormateCommand(ZUPAI))) {
                 logger.info("组排模式查询");
                 return zuPai(event,schedules);
             }
-            if(content.startsWith(formateCommand(COOP))) {
+            if(content.startsWith(stringFormateCommand(COOP))) {
                 logger.info("鲑鱼跑模式查询");
                 return coop(event,schedules);
             }

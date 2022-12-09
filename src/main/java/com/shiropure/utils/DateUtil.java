@@ -32,4 +32,8 @@ public class DateUtil {
         OffsetDateTime offsetDateTime = OffsetDateTime.of(dateTime, offset);
         return offsetDateTime;
     }
+    public static String HHformater(int str)
+    {
+        return str<10? "0"+str : ""+str;
+    }
 }

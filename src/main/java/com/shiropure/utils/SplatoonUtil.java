@@ -13,7 +13,7 @@ public class SplatoonUtil {
             put("Mincemeat Metalworks", "鱼肉碎金属");
             put("Hammerhead Bridge", "真鲭跨海大桥");
             put("Museum d'Alfonsino", "金眼鲷美术馆");
-            put("Mahi-Mahi Resort", "鬼头刀SPA度假区");
+            put("Mahi-Mahi Resort", "鬼头刀度假区");
             put("Inkblot Art Academy", "海女美术大学");
             put("Sturgeon Shipyard", "鲟鱼造船厂");
             put("MakoMart", "座头购物中心");
