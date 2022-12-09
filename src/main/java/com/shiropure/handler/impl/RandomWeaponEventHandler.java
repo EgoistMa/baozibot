@@ -29,7 +29,7 @@ public class RandomWeaponEventHandler extends GroupMessageEventHandler{
     public List<MessageChain> handleMessageEvent (MessageEvent event, Context ctx) {
         try {
             //获取随机数
-            int random = (int)Math.floor(Math.random()*(53-1+1)+1);
+            int random = (int)Math.floor(Math.random()*(66-1+1)+1);
             List<MessageChain> ans =new ArrayList<>();
             //获取随机图片
             ExternalResource res = ExternalResource.create(new File("./images/"+random+".png"));
