@@ -1,9 +1,9 @@
 package com.shiropure.api;
 
-import com.shiropure.Model.Schedules;
-import com.shiropure.Model.SplatoonSchedules;
-import com.shiropure.Model.Stage;
-import com.shiropure.Model.Weapon;
+import com.shiropure.Model.Schedules.Schedules;
+import com.shiropure.Model.Schedules.SplatoonSchedules;
+import com.shiropure.Model.Schedules.Stage;
+import com.shiropure.Model.Schedules.Weapon;
 import com.shiropure.utils.DateUtil;
 import com.shiropure.utils.IOUtil;
 import com.shiropure.utils.SplatoonApiUtil;
@@ -16,10 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SplatoonApi {
+public class SplatoonSchedulesApi {
     static String schedulesApi = "https://splatoon3.ink/data/schedules.json";
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
+    /**
+     * 提取并对象化根据 schedulesApi 获取的json文件
+     *
+     * @return SplatoonSchedules 类
+     */
     public static SplatoonSchedules SplatoonSchedules() throws IOException
     {
         Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(schedulesApi), "GET", null, null).get("data");
@@ -31,6 +35,12 @@ public class SplatoonApi {
         SplatoonSchedules SplatoonSchedules = new SplatoonSchedules(regularSchedules,bankaraSchedules,xSchedules,leagueSchedules,coopGroupingSchedule);
         return SplatoonSchedules;
     }
+    /**
+     * 根据获取的Map 进一步解析出关于合作模式的日程计划
+     *
+     * @param dataMap  合作模式的Map<String,Object>
+     * @return 返回场次列表
+     */
     public static Schedules[] readCoopSchedules(Map<String, Object> dataMap) throws IOException
     {
         LinkedList<Schedules>schedules = new LinkedList<>();
@@ -62,6 +72,12 @@ public class SplatoonApi {
         }
         return schedules.toArray(new Schedules[0]);
     }
+    /**
+     * 根据获取的Map 进一步解析出关于组排模式的日程计划
+     *
+     * @param dataMap  组排模式的Map<String,Object>
+     * @return 返回场次列表
+     */
     public static Schedules[] readLeagueSchedules (Map<String, Object> dataMap)
     {
         LinkedList<Schedules>schedules = new LinkedList<>();
@@ -88,6 +104,12 @@ public class SplatoonApi {
         }
         return schedules.toArray(new Schedules[0]);
     }
+    /**
+     * 根据获取的Map 进一步解析出关于X模式的日程计划
+     *
+     * @param dataMap  X模式的Map<String,Object>
+     * @return 返回场次列表
+     */
     public static Schedules[] readXSchedules (Map<String, Object> dataMap)
     {
         LinkedList<Schedules>schedules = new LinkedList<>();
@@ -113,6 +135,12 @@ public class SplatoonApi {
         }
         return schedules.toArray(new Schedules[0]);
     }
+    /**
+     * 根据获取的Map 进一步解析出关于真格模式的日程计划
+     *
+     * @param dataMap  真格模式的Map<String,Object>
+     * @return 返回场次列表
+     */
     public static Schedules[] readBankaraSchedules (Map<String, Object> dataMap)
     {
         LinkedList<Schedules>schedules = new LinkedList<>();
@@ -142,6 +170,12 @@ public class SplatoonApi {
         }
         return schedules.toArray(new Schedules[0]);
     }
+    /**
+     * 根据获取的Map 进一步解析出关于涂地模式的日程计划
+     *
+     * @param dataMap  涂地模式的Map<String,Object>
+     * @return 返回场次列表
+     */
     public static Schedules[] readRegularSchedules (Map<String, Object> dataMap)
     {
         LinkedList<Schedules>schedules = new LinkedList<>();

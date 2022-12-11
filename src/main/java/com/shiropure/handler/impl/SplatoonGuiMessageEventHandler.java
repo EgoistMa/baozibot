@@ -1,18 +1,11 @@
 package com.shiropure.handler.impl;
 
-import com.shiropure.Model.Schedules;
-import com.shiropure.Model.SplatoonSchedules;
-import com.shiropure.Model.Stage;
-import com.shiropure.Model.Weapon;
-import com.shiropure.api.SplatoonApi;
-import com.shiropure.config.RobotConfig;
-import com.shiropure.exception.FileUploadException;
+import com.shiropure.Model.Schedules.Schedules;
+import com.shiropure.Model.Schedules.SplatoonSchedules;
+import com.shiropure.api.SplatoonSchedulesApi;
 import com.shiropure.handler.handler;
 import com.shiropure.proxy.Context;
-import com.shiropure.utils.DateUtil;
 import com.shiropure.utils.ImageUtil;
-import com.shiropure.utils.OfUtil;
-import com.shiropure.utils.SplatoonUtil;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -21,12 +14,9 @@ import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.time.OffsetDateTime;
 import java.util.*;
 
 import static com.shiropure.utils.DateUtil.HHformater;
-import static com.shiropure.utils.SplatoonUtil.translateRule;
 import static com.shiropure.utils.SplatoonUtil.translateStage;
 
 @handler()
@@ -53,7 +43,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
             logger.info("message handled by baoziBot");
-            SplatoonSchedules schedules = SplatoonApi.SplatoonSchedules();
+            SplatoonSchedules schedules = SplatoonSchedulesApi.SplatoonSchedules();
             String content = getPlantContent(event);
             if (content.startsWith(formateCommand(TUDI))) {
                 logger.info("涂地模式查询");

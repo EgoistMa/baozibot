@@ -1,4 +1,4 @@
-package com.shiropure.Model;
+package com.shiropure.Model.Schedules;
 
 public class Stage {
     public String stageName;

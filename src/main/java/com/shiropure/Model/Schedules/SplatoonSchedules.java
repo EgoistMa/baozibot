@@ -1,4 +1,4 @@
-package com.shiropure.Model;
+package com.shiropure.Model.Schedules;
 
 
 import java.util.Arrays;

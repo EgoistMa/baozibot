@@ -157,38 +157,24 @@ public class ImageUtil {
         rule.put("Splat Zones","./images/imagesBackground/区.png");
         rule.put("Rainmaker","./images/imagesBackground/鱼.png");
         rule.put("Tower Control","./images/imagesBackground/塔3.png");
-
-
         String outImg="./images/imagesBackground/t.png";
 
-
-
         int y=663;
-
         int modSize=330;
         File modFile;
         int modx=753-modSize/2;
 //        int mody=y+220;
         int mody=420;
-
         //地图名字统一设置
         int mapNameSize=60;
         String mapNameFont="汉仪铸字杂货铺W";
         int  wordSpacing=65;
-
-
-
-
-
         //时间
         String timefont= "SplatoonFontFix";
-
-
         int timeFontSize=90;
         int wmx=930;
 //        int wmy=y+80;
         int wmy=280;
-
         //上两张地图参数地图
         int imgW=680;
         int imgh=(int)(imgW/2.1);
@@ -197,14 +183,10 @@ public class ImageUtil {
         //765
 //        int addy=232+y;
 //        int addy=755-imgh;
-
-
         int cornerRadius=80;
-
         //地图名字高度
         int uy=395;
         int dy=1060;
-
         //左上地图名字
         //6
 //      int urx=210;
@@ -218,171 +200,92 @@ public class ImageUtil {
         //3
 //        int xplus=100;
 //        int wordSpacingPlus=7;
-
         String watermark= (String)map.get("time");
-
-
-
-
-
-
-
-
-
-
-
-        if (mod=="bankara"){
-            //真格部分
-
-
-            File bgf=new File("./images/imagesBackground/bg.png");
-            String rule1=(String)map.get("rule1") ;
-            String rule2=(String)map.get("rule2") ;
-
-            String mapName= (String) map.get("name1");
-            String mapName2= (String) map.get("name2");
-            String mapName3= (String) map.get("name3");
-            String mapName4= (String) map.get("name4");
-            try {
-                URL f =new URL((String)map.get("url1"));
-                URL f2=new URL((String)map.get("url2"));
-                URL f3=new URL((String)map.get("url3"));
-                URL f4=new URL((String)map.get("url4"));
-
-
-
-                BufferedImage finalImg=addImg(bgf,roundedCorner(splicingPictures(imageSize(f,imgW,imgh),imageSize(f2,imgW,imgh),10),cornerRadius),addx,addy);
+        try {
+            if (mod == "bankara") {
+                //真格部分
+                File bgf = new File("./images/imagesBackground/bg.png");
+                String rule1 = (String) map.get("rule1");
+                String rule2 = (String) map.get("rule2");
+                String mapName = (String) map.get("name1");
+                String mapName2 = (String) map.get("name2");
+                String mapName3 = (String) map.get("name3");
+                String mapName4 = (String) map.get("name4");
+                URL f = new URL((String) map.get("url1"));
+                URL f2 = new URL((String) map.get("url2"));
+                URL f3 = new URL((String) map.get("url3"));
+                URL f4 = new URL((String) map.get("url4"));
+                BufferedImage finalImg = addImg(bgf, roundedCorner(splicingPictures(imageSize(f, imgW, imgh), imageSize(f2, imgW, imgh), 10), cornerRadius), addx, addy);
                 //上半部分时间
-                finalImg=addWatermark(finalImg,watermark,timefont,timeFontSize,wmx,wmy);
+                finalImg = addWatermark(finalImg, watermark, timefont, timeFontSize, wmx, wmy);
                 //上半部分模式标志
-                modFile= new File((String) rule.get(rule1));
-                finalImg=addImg(finalImg,imageSize(modFile,modSize,modSize),modx,mody);
-
+                modFile = new File((String) rule.get(rule1));
+                finalImg = addImg(finalImg, imageSize(modFile, modSize, modSize), modx, mody);
                 //下半部分
 //            BufferedImage Img=roundedCorner(splicingPictures(imageSize(f3,imgW,imgh),imageSize(f4,imgW,imgh),10),cornerRadius);
-                finalImg=addImg(finalImg,roundedCorner(splicingPictures(imageSize(f3,imgW,imgh),imageSize(f4,imgW,imgh),10),cornerRadius),addx,addy+y);
-
-                finalImg= finalImg=addWatermark(finalImg,watermark,timefont,timeFontSize,wmx,wmy+y);
-
-                modFile= new File((String) rule.get(rule2));
-                finalImg=addImg(finalImg,imageSize(modFile,modSize,modSize),modx,mody+y);
-
-
+                finalImg = addImg(finalImg, roundedCorner(splicingPictures(imageSize(f3, imgW, imgh), imageSize(f4, imgW, imgh), 10), cornerRadius), addx, addy + y);
+                finalImg = finalImg = addWatermark(finalImg, watermark, timefont, timeFontSize, wmx, wmy + y);
+                modFile = new File((String) rule.get(rule2));
+                finalImg = addImg(finalImg, imageSize(modFile, modSize, modSize), modx, mody + y);
                 //地图文字部分
                 //左上
-                finalImg=addWatermark(finalImg,mapName,mapNameFont,mapNameSize,urx+getxPlus(mapName.length()),uy,wordSpacing+getWordSpacingPlus(mapName.length()));
+                finalImg = addWatermark(finalImg, mapName, mapNameFont, mapNameSize, urx + getxPlus(mapName.length()), uy, wordSpacing + getWordSpacingPlus(mapName.length()));
                 //右上
-                finalImg=addWatermark(finalImg,mapName2,mapNameFont,mapNameSize,ulx+getxPlus(mapName2.length()),uy,wordSpacing+getWordSpacingPlus(mapName2.length()));
+                finalImg = addWatermark(finalImg, mapName2, mapNameFont, mapNameSize, ulx + getxPlus(mapName2.length()), uy, wordSpacing + getWordSpacingPlus(mapName2.length()));
                 //左下
-                finalImg=addWatermark(finalImg,mapName3,mapNameFont,mapNameSize,urx+getxPlus(mapName3.length()),dy,wordSpacing+getWordSpacingPlus(mapName3.length()));
+                finalImg = addWatermark(finalImg, mapName3, mapNameFont, mapNameSize, urx + getxPlus(mapName3.length()), dy, wordSpacing + getWordSpacingPlus(mapName3.length()));
                 //右d
-                finalImg=addWatermark(finalImg,mapName4,mapNameFont,mapNameSize,ulx+getxPlus(mapName4.length()),dy,wordSpacing+getWordSpacingPlus(mapName4.length()));
+                finalImg = addWatermark(finalImg, mapName4, mapNameFont, mapNameSize, ulx + getxPlus(mapName4.length()), dy, wordSpacing + getWordSpacingPlus(mapName4.length()));
 
                 File newFile = new File(outImg);
                 ImageIO.write(finalImg, "png", newFile);
-                System.out.println("爬");
+                //System.out.println("爬");
+            } else if (mod == "x") {
+                File bgf = new File("./images/imagesBackground/bgm2.png");
+                String rule1 = (String) map.get("rule1");
+                String mapName = (String) map.get("name1");
+                String mapName2 = (String) map.get("name2");
+                URL f = new URL((String) map.get("url1"));
+                URL f2 = new URL((String) map.get("url2"));
 
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-
-        } else if (mod=="x") {
-
-
-            File bgf=new File("./images/imagesBackground/bgm2.png");
-            String rule1=(String)map.get("rule1") ;
-            String mapName= (String) map.get("name1");
-            String mapName2= (String) map.get("name2");
-            try {
-                URL f =new URL((String)map.get("url1"));
-                URL f2=new URL((String)map.get("url2"));
-
-                BufferedImage finalImg=addImg(bgf,roundedCorner(splicingPictures(imageSize(f,imgW,imgh),imageSize(f2,imgW,imgh),10),cornerRadius),addx,addy);
+                BufferedImage finalImg = addImg(bgf, roundedCorner(splicingPictures(imageSize(f, imgW, imgh), imageSize(f2, imgW, imgh), 10), cornerRadius), addx, addy);
                 //上半部分时间
-
-                finalImg=addWatermark(finalImg,watermark,timefont,timeFontSize,wmx,wmy);
-
+                finalImg = addWatermark(finalImg, watermark, timefont, timeFontSize, wmx, wmy);
                 //上半部分模式标志
-                modFile= new File((String) rule.get(rule1));
-                finalImg=addImg(finalImg,imageSize(modFile,modSize,modSize),modx,mody);
-
-
-                finalImg=addWatermark(finalImg,mapName,mapNameFont,mapNameSize,urx+getxPlus(mapName.length()),uy,wordSpacing+getWordSpacingPlus(mapName.length()));
+                modFile = new File((String) rule.get(rule1));
+                finalImg = addImg(finalImg, imageSize(modFile, modSize, modSize), modx, mody);
+                finalImg = addWatermark(finalImg, mapName, mapNameFont, mapNameSize, urx + getxPlus(mapName.length()), uy, wordSpacing + getWordSpacingPlus(mapName.length()));
                 //右上
-                finalImg=addWatermark(finalImg,mapName2,mapNameFont,mapNameSize,ulx+getxPlus(mapName2.length()),uy,wordSpacing+getWordSpacingPlus(mapName2.length()));
-
-
-
+                finalImg = addWatermark(finalImg, mapName2, mapNameFont, mapNameSize, ulx + getxPlus(mapName2.length()), uy, wordSpacing + getWordSpacingPlus(mapName2.length()));
                 File newFile = new File(outImg);
                 ImageIO.write(finalImg, "png", newFile);
-                System.out.println("爬");
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }else{
-
-            //涂地
+                //System.out.println("爬");
+            } else {
+                //涂地
 //            File f =new File((String)map.get("url1"));
 //            File f2=new File((String)map.get("url2"));
-
-            File bgf=new File("./images/imagesBackground/bgm3.png");
-            String mapName= (String) map.get("name1");
-            String mapName2= (String) map.get("name2");
-
-            try {
-
-                URL f=new URL((String)map.get("url1"));
-                URL f2=new URL((String)map.get("url2"));
-
-
-                BufferedImage finalImg=addImg(bgf,roundedCorner(splicingPictures(imageSize(f,imgW,imgh),imageSize(f2,imgW,imgh),10),cornerRadius),addx,addy);
+                File bgf = new File("./images/imagesBackground/bgm3.png");
+                String mapName = (String) map.get("name1");
+                String mapName2 = (String) map.get("name2");
+                URL f = new URL((String) map.get("url1"));
+                URL f2 = new URL((String) map.get("url2"));
+                BufferedImage finalImg = addImg(bgf, roundedCorner(splicingPictures(imageSize(f, imgW, imgh), imageSize(f2, imgW, imgh), 10), cornerRadius), addx, addy);
                 //上半部分时间
-
-                finalImg=addWatermark(finalImg,watermark,timefont,timeFontSize,wmx,wmy);
-
-                finalImg=addWatermark(finalImg,mapName,mapNameFont,mapNameSize,urx+getxPlus(mapName.length()),uy,wordSpacing+getWordSpacingPlus(mapName.length()));
+                finalImg = addWatermark(finalImg, watermark, timefont, timeFontSize, wmx, wmy);
+                finalImg = addWatermark(finalImg, mapName, mapNameFont, mapNameSize, urx + getxPlus(mapName.length()), uy, wordSpacing + getWordSpacingPlus(mapName.length()));
                 //右上
-                finalImg=addWatermark(finalImg,mapName2,mapNameFont,mapNameSize,ulx+getxPlus(mapName2.length()),uy,wordSpacing+getWordSpacingPlus(mapName2.length()));
-
-
+                finalImg = addWatermark(finalImg, mapName2, mapNameFont, mapNameSize, ulx + getxPlus(mapName2.length()), uy, wordSpacing + getWordSpacingPlus(mapName2.length()));
                 File newFile = new File(outImg);
                 ImageIO.write(finalImg, "png", newFile);
-                System.out.println("爬");
-
-
-            }catch (Exception e){
-                e.printStackTrace();
+                //System.out.println("爬");
             }
-
+            return outImg;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
-
-
-
-
-        return outImg;
+        return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //自定义图片尺寸 参数 File 图片宽度 图片高度
     public static BufferedImage imageSize(File f, int w, int h) throws IOException {
@@ -391,48 +294,25 @@ public class ImageUtil {
         newImg.getGraphics().drawImage(img,0,0,w,h,null);
         return newImg;
     }
-
     public static BufferedImage imageSize(URL f, int w, int h) throws IOException {
         BufferedImage img =ImageIO.read(f);
         BufferedImage newImg=new BufferedImage(w,h, BufferedImage.TYPE_INT_ARGB);
         newImg.getGraphics().drawImage(img,0,0,w,h,null);
         return newImg;
     }
-
-
     // File(原图)  BufferedImage 添加进去的图片 x y添加图片的坐标
     public static BufferedImage addImg(File f, BufferedImage addimg, int x, int y) throws IOException{
         BufferedImage backgroundImage = ImageIO.read(f);
         Graphics2D pen = backgroundImage.createGraphics();
         pen.drawImage(addimg ,null,x,y);
-
-
-
-
-
-
 //        System.out.println(backgroundImage.getWidth());
 //        System.out.println(backgroundImage.getHeight());
-
-
-
-
         return backgroundImage;
     }
     public static BufferedImage addImg( BufferedImage bgimg,File f, int x, int y) throws IOException{
         BufferedImage addimg = ImageIO.read(f);
         Graphics2D pen = bgimg.createGraphics();
         pen.drawImage(addimg ,null,x,y);
-
-
-
-
-
-
-
-
-
-
         return bgimg;
     }
 
@@ -440,8 +320,6 @@ public class ImageUtil {
     public static BufferedImage addImg(BufferedImage img, BufferedImage addimg, int x, int y) throws IOException{
         Graphics2D pen = img.createGraphics();
         pen.drawImage(addimg ,null,x,y);
-
-
         return img;
     }
     public static int getxPlus(int a){
@@ -460,10 +338,6 @@ public class ImageUtil {
             return 0;
         }else return 7;
     }
-
-
-
-
     //图片拼接
     public static  BufferedImage splicingPictures(File f1,File f2,int a1)throws IOException{
         BufferedImage img1= ImageIO.read(f1);
@@ -486,11 +360,6 @@ public class ImageUtil {
         newImg.setRGB(img1.getWidth()+a.getWidth(),0,img2.getWidth(),img1.getHeight(),ImageArrays[2],0,img2.getWidth());
         return newImg;
     }
-
-
-
-
-
     public static  BufferedImage splicingPictures(BufferedImage img1,BufferedImage img2,int a1)throws IOException{
         BufferedImage a=new BufferedImage(a1,img1.getHeight(), BufferedImage.TYPE_INT_ARGB);
         int[][] ImageArrays = new int[3][];
@@ -510,8 +379,6 @@ public class ImageUtil {
         newImg.setRGB(img1.getWidth()+a.getWidth(),0,img2.getWidth(),img1.getHeight(),ImageArrays[2],0,img2.getWidth());
         return newImg;
     }
-
-
     public static BufferedImage roundedCorner(BufferedImage image,int cornerRadius){
 
         int w = image.getWidth();
@@ -570,14 +437,5 @@ public class ImageUtil {
 
         return img;
     }
-
-
-
-
-
-
-
-
-
 }
 
