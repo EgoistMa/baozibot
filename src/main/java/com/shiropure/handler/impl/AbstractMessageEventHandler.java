@@ -29,7 +29,7 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     public List<String> qqList = null;
 
 
-    public MiraiLogger logger = RobotConfig.logger;
+    public static MiraiLogger logger = RobotConfig.logger;
 
 
     /**
