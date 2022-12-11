@@ -437,5 +437,11 @@ public class ImageUtil {
 
         return img;
     }
+    public static void imgGenerator(BufferedImage img,String out){
+        try {
+            File newFile = new File(out);
+            ImageIO.write(img, "png", newFile);
+        }catch (Exception e){e.printStackTrace();}
+    }
 }
 
