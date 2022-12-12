@@ -21,7 +21,7 @@ public class HelperMessageEventHandler extends GroupMessageEventHandler {
     public HelperMessageEventHandler()
     {
         keywords = new HashSet<>(16);
-        keywords.add(stringFormateCommand(HELP));
+        keywords.add(HELP);
     }
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
@@ -56,12 +56,13 @@ public class HelperMessageEventHandler extends GroupMessageEventHandler {
                             "查询当前组排:            ，组排 （下次）（下下次）...\n" +
                             "查询全部x赛:             ，x （下次）（下下次）...\n" +
                             "查询鲑鱼跑 :             ，打工 (全部)\n" +
-                            "-----------------------------------" +
+                            "-----------------------------------\n" +
                             "随机抽取一个武器          ，随机武器\n" +
                             "私房随机武器              ，私房随机\n" +
-                            "-----------------------------------" +
+                            "-----------------------------------\n" +
                             "保存我的sw码              ，添加sw\n" +
                             "获取我的sw码              ，我的sw\n" +
+                            "删除我的sw码              ，删除sw\n" +
                             "\n" +
                             "\n" +
                             "还在开发中项目......\n" +

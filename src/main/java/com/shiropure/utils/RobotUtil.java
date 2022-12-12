@@ -121,7 +121,7 @@ public class RobotUtil {
             throw new FileUploadException("Can not upload the image from the url: " + url + ", cause by " + e.getCause().toString());
         }
     }
-    public String formateCommand(String cmd)
+    public static String formateCommand(String cmd)
     {
         return RobotConfig.commandPrefix+cmd;
     }

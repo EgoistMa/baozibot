@@ -14,6 +14,8 @@ import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static com.shiropure.utils.DateUtil.HHformater;
@@ -73,14 +75,17 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     }
 
     private List<MessageChain> X(MessageEvent event, SplatoonSchedules schedules) throws IOException {
+        String content = getPlantContent(event);
+        String subcommand = content.substring(formateCommand(TUDI).length()).trim();
+        int index = getIndex(subcommand);
         Schedules[] xSchedules = schedules.xSchedules;
         String time = "";
-        time += HHformater(xSchedules[0].startTime.plusHours(8).getHour()) +":00-";
-        time += HHformater(xSchedules[0].endTime.plusHours(8).getHour()) +":00";
-        String name1 = translateStage(xSchedules[0].getStages()[0].stageName);
-        String name2 =  translateStage(xSchedules[0].getStages()[1].stageName);
-        String url1 =  translateStage(xSchedules[0].getStages()[0].stageUrl);
-        String url2 =  translateStage(xSchedules[0].getStages()[1].stageUrl);
+        time += HHformater(xSchedules[index].startTime.plusHours(8).getHour()) +":00-";
+        time += HHformater(xSchedules[index].endTime.plusHours(8).getHour()) +":00";
+        String name1 = translateStage(xSchedules[index].getStages()[0].stageName);
+        String name2 =  translateStage(xSchedules[index].getStages()[1].stageName);
+        String url1 =  translateStage(xSchedules[index].getStages()[0].stageUrl);
+        String url2 =  translateStage(xSchedules[index].getStages()[1].stageUrl);
         String rule = xSchedules[0].getRule();
         HashMap<String,String> map = new HashMap<>();
         map.put("time",time);
@@ -96,20 +101,23 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     }
 
     private List<MessageChain> zhenGe(MessageEvent event, SplatoonSchedules schedules) throws IOException {
+        String content = getPlantContent(event);
+        String subcommand = content.substring(formateCommand(TUDI).length()).trim();
+        int index = getIndex(subcommand);
         Schedules[] bankaraSchedules = schedules.bankaraSchedules;
         String time = "";
-        time += HHformater(bankaraSchedules[0].startTime.plusHours(8).getHour()) +":00-";
-        time += HHformater(bankaraSchedules[0].endTime.plusHours(8).getHour()) +":00";
-        String name1 = translateStage(bankaraSchedules[0].getStages()[0].stageName);
-        String name2 =  translateStage(bankaraSchedules[0].getStages()[1].stageName);
-        String name3 = translateStage(bankaraSchedules[1].getStages()[0].stageName);
-        String name4 =  translateStage(bankaraSchedules[1].getStages()[1].stageName);
-        String url1 =  translateStage(bankaraSchedules[0].getStages()[0].stageUrl);
-        String url2 =  translateStage(bankaraSchedules[0].getStages()[1].stageUrl);
-        String url3 =  translateStage(bankaraSchedules[1].getStages()[0].stageUrl);
-        String url4 =  translateStage(bankaraSchedules[1].getStages()[1].stageUrl);
-        String rule1 = bankaraSchedules[0].getRule();
-        String rule2 = bankaraSchedules[1].getRule();
+        time += HHformater(bankaraSchedules[index*2].startTime.plusHours(8).getHour()) +":00-";
+        time += HHformater(bankaraSchedules[index*2].endTime.plusHours(8).getHour()) +":00";
+        String name1 = translateStage(bankaraSchedules[index*2].getStages()[0].stageName);
+        String name2 =  translateStage(bankaraSchedules[index*2].getStages()[1].stageName);
+        String name3 = translateStage(bankaraSchedules[index*2 + 1].getStages()[0].stageName);
+        String name4 =  translateStage(bankaraSchedules[index*2 + 1].getStages()[1].stageName);
+        String url1 =  translateStage(bankaraSchedules[index*2].getStages()[0].stageUrl);
+        String url2 =  translateStage(bankaraSchedules[index*2].getStages()[1].stageUrl);
+        String url3 =  translateStage(bankaraSchedules[index*2 + 1].getStages()[0].stageUrl);
+        String url4 =  translateStage(bankaraSchedules[index*2 + 1].getStages()[1].stageUrl);
+        String rule1 = bankaraSchedules[index*2].getRule();
+        String rule2 = bankaraSchedules[index*2 + 1].getRule();
         HashMap<String,String> map = new HashMap<>();
         map.put("time",time);
         map.put("name1",name1);
@@ -129,15 +137,18 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     }
 
     private List<MessageChain> tuDI(MessageEvent event, SplatoonSchedules schedules) throws IOException {
+        String content = getPlantContent(event);
+        String subcommand = content.substring(formateCommand(TUDI).length()).trim();
+        int index = getIndex(subcommand);
         //获取当前场次信息
         Schedules[] tudiSchedules = schedules.regularSchedules;
         String time = "";
-        time += HHformater(tudiSchedules[0].startTime.plusHours(8).getHour()) +":00-";
-        time += HHformater(tudiSchedules[0].endTime.plusHours(8).getHour()) +":00";
-        String name1 = translateStage(tudiSchedules[0].getStages()[0].stageName);
-        String name2 =  translateStage(tudiSchedules[0].getStages()[1].stageName);
-        String url1 =  translateStage(tudiSchedules[0].getStages()[0].stageUrl);
-        String url2 =  translateStage(tudiSchedules[0].getStages()[1].stageUrl);
+        time += HHformater(tudiSchedules[index].startTime.plusHours(8).getHour()) +":00-";
+        time += HHformater(tudiSchedules[index].endTime.plusHours(8).getHour()) +":00";
+        String name1 = translateStage(tudiSchedules[index].getStages()[0].stageName);
+        String name2 =  translateStage(tudiSchedules[index].getStages()[1].stageName);
+        String url1 =  translateStage(tudiSchedules[index].getStages()[0].stageUrl);
+        String url2 =  translateStage(tudiSchedules[index].getStages()[1].stageUrl);
         //生成map体 供包子写的 mapImgGenerator 函数
         HashMap<String,String> map = new HashMap<>();
         map.put("time",time);
@@ -149,6 +160,10 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         logger.info("包子功能完成");
         //上传生成文件，并发送
         return sendImage(imagePath,event);
+    }
+    public int getIndex(String command)
+    {
+        return Math.max(command.length()-1, 0);
     }
     public List<MessageChain> sendImage(String path,MessageEvent event) throws IOException {
         List<MessageChain> ans = new ArrayList<>();
