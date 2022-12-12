@@ -22,7 +22,6 @@ import static com.shiropure.utils.DateUtil.HHformater;
 import static com.shiropure.utils.SplatoonUtil.translateStage;
 
 @handler()
-@SuppressWarnings("unchecked")
 public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     public final String TUDI = "涂地";
     public final String ZHENGE = "真格";

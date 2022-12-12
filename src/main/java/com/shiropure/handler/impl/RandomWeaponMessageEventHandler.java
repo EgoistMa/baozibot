@@ -21,7 +21,6 @@ import java.util.List;
 
 
 @handler
-@SuppressWarnings("unchecked")
 public class RandomWeaponMessageEventHandler extends GroupMessageEventHandler{
     public final String command1 = "随机武器";
     public final String command2 = "私房随机";

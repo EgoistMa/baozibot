@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 @handler()
-@SuppressWarnings("unchecked")
 public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
     public static final String regCode = "添加sw";
     public final String getCode = "我的sw";
@@ -89,7 +88,7 @@ public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
         try {
 
             //如果查询不到这个用户存储过sw码
-            if(swRead(user)==null){
+            if(swRead(user).startsWith("您还没有添加过sw码")){
                 String path="./assets/sw码.txt";
 //            String user="12312331212";
 //            String sw="000000000001";

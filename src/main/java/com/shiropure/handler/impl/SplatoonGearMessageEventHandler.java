@@ -4,6 +4,7 @@ import com.shiropure.Model.Gear.Shop;
 import com.shiropure.Model.Schedules.SplatoonSchedules;
 import com.shiropure.api.SplatoonGearApi;
 import com.shiropure.api.SplatoonSchedulesApi;
+import com.shiropure.handler.handler;
 import com.shiropure.proxy.Context;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@handler()
 public class SplatoonGearMessageEventHandler extends GroupMessageEventHandler{
     public final String Gear = "商店";
 
@@ -22,6 +24,7 @@ public class SplatoonGearMessageEventHandler extends GroupMessageEventHandler{
         keywords = new HashSet<>(16);
         keywords.add(stringFormateCommand(Gear));
     }
+    @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
             logger.info("message handled by baoziBot");

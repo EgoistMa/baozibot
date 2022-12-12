@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 @handler()
-@SuppressWarnings("unchecked")
 public class HelperMessageEventHandler extends GroupMessageEventHandler {
     public final String HELP = "#";
     private Set<String> keywords;

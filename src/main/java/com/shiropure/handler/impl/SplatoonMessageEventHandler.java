@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.*;
 
 @handler()
-@SuppressWarnings("unchecked")
 public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     public final String TUDI = "涂地";
     public final String ZHENGE = "真格";
