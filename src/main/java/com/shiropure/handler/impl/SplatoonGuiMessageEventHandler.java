@@ -2,7 +2,9 @@ package com.shiropure.handler.impl;
 
 import com.shiropure.Model.Schedules.Schedules;
 import com.shiropure.Model.Schedules.SplatoonSchedules;
+import com.shiropure.Model.Schedules.Weapon;
 import com.shiropure.api.SplatoonSchedulesApi;
+import com.shiropure.exception.FileUploadException;
 import com.shiropure.handler.handler;
 import com.shiropure.proxy.Context;
 import com.shiropure.utils.ImageUtil;
@@ -14,12 +16,14 @@ import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
 import static com.shiropure.utils.DateUtil.HHformater;
 import static com.shiropure.utils.SplatoonUtil.translateStage;
+import static com.shiropure.utils.SplatoonUtil.translateWeapon;
 
 @handler()
 public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
@@ -64,13 +68,50 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
             }
             if (content.startsWith(formateCommand(COOP))) {
                 logger.info("鲑鱼跑模式查询");
-                //return coop(event, schedules);
+                return coop(event, schedules);
             }
         } catch (Exception e) {
             logError(event, e);
             return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：" + e.getMessage());
         }
         return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：not implement error");
+    }
+
+    private List<MessageChain> coop(MessageEvent event, SplatoonSchedules schedules) throws IOException, FileUploadException {
+        String content = getPlantContent(event);
+        String subcommand = content.substring(formateCommand(COOP).length()).trim();
+        int index = getIndex(subcommand);
+        Schedules[] coopSchedules = schedules.coopGroupingSchedule;
+        String time = "";
+        time += coopSchedules[index].startTime.getMonthValue() +"/" +coopSchedules[index].startTime.getDayOfMonth()+" ";
+        time += HHformater(coopSchedules[index].startTime.plusHours(8).getHour()) +":00-";
+        time += "->";
+        time += coopSchedules[index].endTime.getMonthValue() +"/" +coopSchedules[index].endTime.getDayOfMonth()+" ";
+        time += HHformater(coopSchedules[index].endTime.plusHours(8).getHour()) +":00";
+        String mapName = translateStage(coopSchedules[index].getStages()[0].stageName);
+        String mapUrl = coopSchedules[index].getStages()[0].stageUrl;
+        LinkedList<String> weapons = new LinkedList<>();
+        for (Weapon weapon:coopSchedules[index].weapons) {
+            weapons.addLast(translateWeapon(weapon.getWeaponName()));
+        }
+        // 临时文字版
+        MessageChainBuilder mc= new MessageChainBuilder();
+        StringBuilder sb = new StringBuilder();
+        List<MessageChain> ans = new ArrayList<>();
+        sb.append(time).append("\n");
+        sb.append("地图是:").append(mapName).append("\n");
+        mc.append(sb.toString());
+        sb.delete(0,sb.length());
+        mc.append(uploadImage(event,new URL(mapUrl)));
+        sb.append("发放武器：");
+        for(String weapon:weapons)
+        {
+            sb.append(weapon).append(',');
+        }
+        sb.append("\n");
+        mc.append(sb);
+        ans.add(mc.build());
+        return ans;
     }
 
     private List<MessageChain> X(MessageEvent event, SplatoonSchedules schedules) throws IOException {
