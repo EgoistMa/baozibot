@@ -17,6 +17,7 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -33,7 +34,6 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     public final String ZUPAI = "组排";
     public final String COOP = "打工";
     private Set<String> keywords;
-
     public SplatoonGuiMessageEventHandler() {
         //aa
         keywords = new HashSet<>(16);
@@ -71,7 +71,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
                 return coop(event, schedules);
             }
         } catch (Exception e) {
-            logError(event, e);
+            e.printStackTrace();
             return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：" + e.getMessage());
         }
         return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：not implement error");
@@ -116,7 +116,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
 
     private List<MessageChain> X(MessageEvent event, SplatoonSchedules schedules) throws IOException {
         String content = getPlantContent(event);
-        String subcommand = content.substring(formateCommand(TUDI).length()).trim();
+        String subcommand = content.substring(formateCommand(XMODE).length()).trim();
         int index = getIndex(subcommand);
         Schedules[] xSchedules = schedules.xSchedules;
         String time = "";
@@ -126,7 +126,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         String name2 =  translateStage(xSchedules[index].getStages()[1].stageName);
         String url1 =  translateStage(xSchedules[index].getStages()[0].stageUrl);
         String url2 =  translateStage(xSchedules[index].getStages()[1].stageUrl);
-        String rule = xSchedules[0].getRule();
+        String rule = xSchedules[index].getRule();
         HashMap<String,String> map = new HashMap<>();
         map.put("time",time);
         map.put("name1",name1);
@@ -135,7 +135,6 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         map.put("url2",url2);
         map.put("rule1",rule);
         String imagePath = ImageUtil.mapImgGenerator(map,"x");
-        logger.info("包子功能完成");
         //上传生成文件，并发送
         return sendImage(imagePath,event);
     }
