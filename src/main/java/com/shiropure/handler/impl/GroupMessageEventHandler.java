@@ -66,7 +66,6 @@ public class GroupMessageEventHandler extends AbstractMessageEventHandler {
 
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
-        event.getSubject().sendMessage("执行了一个事件 (GroupMessageEvent 第69行)");
         List<MessageChain> ans = new ArrayList<>();
         ans.add(buildMessageChain("—— baoziBot v0.1.0 ——\n"));
         return ans;

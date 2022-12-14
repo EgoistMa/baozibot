@@ -17,8 +17,14 @@ public class BaseBeforeInterceptor extends AdaptInterceptor {
     @Override
     public boolean interceptBefore(MessageEvent event) {
         // 如果如何，放行开机命令
-        if (getContent(event).equals(RobotConfig.commandPrefix + "开机")) {
+        if (getContent(event).equals(RobotConfig.commandPrefix + "开机") && getSenderId(event).equals("332883417")) {
+            RobotConfig.enableRobot = true;
+
             return false;
+        }
+        if (getContent(event).equals(RobotConfig.commandPrefix + "关机") && getSenderId(event).equals("332883417")) {
+            RobotConfig.enableRobot = false;
+            return true;
         }
         System.out.println("RobotConfig.enableRobot = " + RobotConfig.enableRobot);
         if (!RobotConfig.enableRobot)               return true;
