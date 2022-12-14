@@ -8,7 +8,6 @@ public class Brand {
         this.name = name;
         this.imageUrl = imageUrl;
     }
-
     public String getName() {
         return name;
     }

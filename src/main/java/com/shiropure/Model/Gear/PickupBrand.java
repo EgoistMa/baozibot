@@ -12,7 +12,6 @@ public class PickupBrand {
     public OffsetDateTime saleEndTime;
     public String NextBrandName;
     public String NextBrandImageUrl;
-
     public GearOffer[] pickupGears;
 
     public PickupBrand(String pickupBrandImageUrl, String brandName, String brandGearPowerName, String brandGearPowerDesc, String brandGearPowerImageUrl, OffsetDateTime saleEndTime, String nextBrandName, String nextBrandImageUrl, GearOffer[] pickupGears) {

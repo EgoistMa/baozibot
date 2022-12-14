@@ -2,16 +2,14 @@ package com.shiropure.api;
 
 import com.shiropure.Model.Gear.*;
 import com.shiropure.utils.DateUtil;
-import com.shiropure.utils.IOUtil;
-
 import java.io.IOException;
-import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.shiropure.utils.IOUtil.*;
 import static com.shiropure.utils.SplatoonApiUtil.openNode;
 import static com.shiropure.utils.SplatoonApiUtil.openNodeList;
 
@@ -21,11 +19,13 @@ public class SplatoonGearApi {
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public static Shop GearShop() throws IOException {
-        Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(gearApi), "GET", null, null).get("data");
+        OffsetDateTime currentTime = OffsetDateTime.now();
+        String filePath = "./Caches/gear"+currentTime.getHour()+".data";
+        Map<String, Object> dataMap = getCacheOrDownloadfromApi(filePath,gearApi);
         dataMap = openNode(dataMap,"gesotown");
         PickupBrand pickupBrand = ReadPickupBrand(dataMap);
         GearOffer[] limitedGears = ReadGearOffers(dataMap);
-        return null;
+        return new Shop(pickupBrand,limitedGears);
     }
     public static  PickupBrand ReadPickupBrand(Map<String,Object> dataMap)
     {
@@ -46,7 +46,7 @@ public class SplatoonGearApi {
         List<GearOffer> out = new ArrayList<>();
         for (Map<String, Object> node:data) {
             OffsetDateTime saleEndTime = DateUtil.dateFormatter(node.get("saleEndTime").toString(),dateTimeFormatter);
-            double price = Double.valueOf(node.get("price").toString());
+            double price = Double.parseDouble(node.get("price").toString());
             Gear gear = ReadGear(openNode(node,"gear"));
             out.add(new GearOffer(saleEndTime,price,gear));
         }

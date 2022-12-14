@@ -5,16 +5,14 @@ import com.shiropure.Model.Schedules.SplatoonSchedules;
 import com.shiropure.Model.Schedules.Stage;
 import com.shiropure.Model.Schedules.Weapon;
 import com.shiropure.utils.DateUtil;
-import com.shiropure.utils.IOUtil;
 import com.shiropure.utils.SplatoonApiUtil;
 
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.shiropure.utils.IOUtil.*;
 
 public class SplatoonSchedulesApi {
     static String schedulesApi = "https://splatoon3.ink/data/schedules.json";
@@ -26,14 +24,16 @@ public class SplatoonSchedulesApi {
      */
     public static SplatoonSchedules SplatoonSchedules() throws IOException
     {
-        Map<String, Object> dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(schedulesApi), "GET", null, null).get("data");
+        OffsetDateTime currentTime = OffsetDateTime.now();
+        String filePath = "./Caches/schedules"+currentTime.getHour()+".data";
+        Map<String, Object> dataMap = getCacheOrDownloadfromApi(filePath,schedulesApi);
+
         Schedules[] regularSchedules = readRegularSchedules(dataMap);
         Schedules[] bankaraSchedules = readBankaraSchedules(dataMap);
         Schedules[] xSchedules = readXSchedules(dataMap);
         Schedules[] leagueSchedules = readLeagueSchedules(dataMap);
         Schedules[] coopGroupingSchedule = readCoopSchedules(dataMap);
-        SplatoonSchedules SplatoonSchedules = new SplatoonSchedules(regularSchedules,bankaraSchedules,xSchedules,leagueSchedules,coopGroupingSchedule);
-        return SplatoonSchedules;
+        return new SplatoonSchedules(regularSchedules,bankaraSchedules,xSchedules,leagueSchedules,coopGroupingSchedule);
     }
     /**
      * 根据获取的Map 进一步解析出关于合作模式的日程计划
@@ -41,7 +41,7 @@ public class SplatoonSchedulesApi {
      * @param dataMap  合作模式的Map<String,Object>
      * @return 返回场次列表
      */
-    public static Schedules[] readCoopSchedules(Map<String, Object> dataMap) throws IOException
+    public static Schedules[] readCoopSchedules(Map<String, Object> dataMap)
     {
         LinkedList<Schedules>schedules = new LinkedList<>();
         Map<String, Object> leagueSchedules = SplatoonApiUtil.openNode(dataMap,"coopGroupingSchedule");

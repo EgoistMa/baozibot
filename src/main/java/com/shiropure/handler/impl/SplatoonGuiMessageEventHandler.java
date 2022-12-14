@@ -1,8 +1,10 @@
 package com.shiropure.handler.impl;
 
+import com.shiropure.Model.Gear.Shop;
 import com.shiropure.Model.Schedules.Schedules;
 import com.shiropure.Model.Schedules.SplatoonSchedules;
 import com.shiropure.Model.Schedules.Weapon;
+import com.shiropure.api.SplatoonGearApi;
 import com.shiropure.api.SplatoonSchedulesApi;
 import com.shiropure.exception.FileUploadException;
 import com.shiropure.handler.handler;
@@ -33,6 +35,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     public final String XMODE = "x";
     public final String ZUPAI = "组排";
     public final String COOP = "打工";
+    public final String SHOP = "商店";
     private Set<String> keywords;
     public SplatoonGuiMessageEventHandler() {
         //aa
@@ -42,6 +45,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         keywords.add(formateCommand(XMODE));
         keywords.add(formateCommand(ZUPAI));
         keywords.add(formateCommand(COOP));
+        keywords.add(formateCommand(SHOP));
     }
 
     @Override
@@ -64,17 +68,52 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
             }
             if (content.startsWith(formateCommand(ZUPAI))) {
                 logger.info("组排模式查询");
-                //return zuPai(event, schedules);
+                return zuPai(event, schedules);
             }
             if (content.startsWith(formateCommand(COOP))) {
                 logger.info("鲑鱼跑模式查询");
                 return coop(event, schedules);
+            }
+            if (content.startsWith(formateCommand(SHOP))) {
+                logger.info("商店查询");
+                return shop(event);
             }
         } catch (Exception e) {
             e.printStackTrace();
             return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：" + e.getMessage());
         }
         return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：not implement error");
+    }
+
+    private List<MessageChain> shop(MessageEvent event) throws IOException {
+        Shop shop = SplatoonGearApi.GearShop();
+        //String imagePath = ImageUtil.mapImgGenerator(shop);
+        return null;//sendImage(imagePath,event);
+    }
+
+    private List<MessageChain> zuPai(MessageEvent event, SplatoonSchedules schedules) throws IOException {
+        String content = getPlantContent(event);
+        String subcommand = content.substring(formateCommand(ZUPAI).length()).trim();
+        int index = getIndex(subcommand);
+        Schedules[] leagueSchedules = schedules.leagueSchedules;
+        String time = "";
+        time += HHformater(leagueSchedules[index].startTime.plusHours(8).getHour()) +":00-";
+        time += HHformater(leagueSchedules[index].endTime.plusHours(8).getHour()) +":00";
+        String name1 = translateStage(leagueSchedules[index].getStages()[0].stageName);
+        String name2 =  translateStage(leagueSchedules[index].getStages()[1].stageName);
+        String url1 =  translateStage(leagueSchedules[index].getStages()[0].stageUrl);
+        String url2 =  translateStage(leagueSchedules[index].getStages()[1].stageUrl);
+        String rule = leagueSchedules[index].getRule();
+        HashMap<String,String> map = new HashMap<>();
+        map.put("time",time);
+        map.put("name1",name1);
+        map.put("name2",name2);
+        map.put("url1",url1);
+        map.put("url2",url2);
+        map.put("rule1",rule);
+        String imagePath = ImageUtil.mapImgGenerator(map,"league");
+        //上传生成文件，并发送
+        return sendImage(imagePath,event);
     }
 
     private List<MessageChain> coop(MessageEvent event, SplatoonSchedules schedules) throws IOException, FileUploadException {

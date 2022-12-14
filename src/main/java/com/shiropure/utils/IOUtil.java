@@ -6,6 +6,7 @@ import com.shiropure.config.RobotConfig;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -141,5 +142,100 @@ public class IOUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private static String[] getFolderAndFileName(String path)
+    {
+        StringBuilder sb = new StringBuilder();
+        path = path.substring(2);
+        String[] paths = path.split("/");
+        for (int i = 0;i<paths.length - 1;i++) {
+            sb.append(paths[i]);
+        }
+        String[] out = new String[2];
+        out[0] = sb.toString();
+        out[1] = paths[paths.length-1];
+        return out;
+    }
+    public static void createFile(String path) throws IOException {
+        String[] paths = getFolderAndFileName(path);
+        File file = new File(paths[0]);
+        if(!file.exists())
+        {
+            file.mkdir();
+        }
+        file = new File(path);
+        if(!file.exists()) {
+            file.createNewFile();
+        }
+    }
+    public static void removeAllFiles(String path)
+    {
+        File[] files = new File(path).listFiles();
+        if(files != null)
+        {
+            for (File file: files) {
+                removeFile(file.getPath());
+            }
+        }
+    }
+    public static void removeFile(String path)
+    {
+        new File(path).delete();
+    }
+    public static void saveObjectToFile(Map<String, Object> dataMap, String filePath) throws IOException{
+        try{
+            if(!new File(filePath).exists())
+            {
+                createFile(filePath);
+            }
+            FileOutputStream fos =
+                    new FileOutputStream(filePath);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(dataMap);
+            oos.close();
+            fos.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static Map<String, Object> loadObjectFromFile(String filePath) throws IOException {
+        Map<String, Object> outMap;
+        try
+        {
+            FileInputStream fis = new FileInputStream(filePath);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            outMap = (Map<String, Object>) ois.readObject();
+            ois.close();
+            fis.close();
+            return outMap;
+        }catch(IOException ioe)
+        {
+            ioe.printStackTrace();
+            return new HashMap<>();
+        }catch(ClassNotFoundException c)
+        {
+            System.out.println("Class not found");
+            c.printStackTrace();
+            return null;
+        }
+    }
+    public static Map<String, Object> getCacheOrDownloadfromApi(String filePath,String apiUrl) throws IOException {
+        Map<String, Object> dataMap ;
+        File file = new File(filePath);
+        if(file.exists())
+        {
+            RobotConfig.logger.info("从缓存中载入schedules....");
+            //load
+            dataMap = loadObjectFromFile(filePath);
+        }else
+        {
+            RobotConfig.logger.info("下载schedules并保存至本地");
+            //删除文件夹内所有文件
+            removeAllFiles("./schedulesCaches");
+            dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(apiUrl), "GET", null, null).get("data");
+            saveObjectToFile(dataMap , filePath);
+        }
+        return  dataMap;
     }
 }
