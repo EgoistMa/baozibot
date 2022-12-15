@@ -5,10 +5,13 @@ import com.shiropure.exception.FileUploadException;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.utils.ExternalResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RobotUtil {
@@ -128,5 +131,13 @@ public class RobotUtil {
     public String stringFormateCommand(String cmd)
     {
         return RobotConfig.stringCommandPrefix+cmd;
+    }
+    public List<MessageChain> sendImage(String path,MessageEvent event) throws IOException {
+        List<MessageChain> ans = new ArrayList<>();
+        ExternalResource res = ExternalResource.create(new File(path));
+        Image image = event.getSubject().uploadImage(res);
+        res.close();
+        ans.add(new MessageChainBuilder().append(image).build());
+        return ans;
     }
 }

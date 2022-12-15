@@ -36,11 +36,11 @@ public class RandomWeaponMessageEventHandler extends GroupMessageEventHandler{
         String content = getPlantContent(event);
         try {
             if (content.startsWith(formateCommand(command1))) {
-                logger.info("随机武器");
+                info("随机武器");
                 return randomWeapon(event);
             }
             if (content.startsWith(formateCommand(command2))) {
-                logger.info("私房随机");
+                info("私房随机");
                 String imagePath = civilWarRandomWeapon(2,1,1);
                 return sendImage(imagePath,event);
             }
@@ -62,16 +62,9 @@ public class RandomWeaponMessageEventHandler extends GroupMessageEventHandler{
         ans.add(new MessageChainBuilder().append(image).build());
         return ans;
     }
-    public List<MessageChain> sendImage(String path,MessageEvent event) throws IOException {
-        List<MessageChain> ans = new ArrayList<>();
-        ExternalResource res = ExternalResource.create(new File(path));
-        Image image = event.getSubject().uploadImage(res);
-        res.close();
-        ans.add(new MessageChainBuilder().append(image).build());
-        return ans;
-    }
-    public static  String civilWarRandomWeapon(int frontCourt,int middleCourt,int backCourt){
-        if(frontCourt+middleCourt+backCourt!=4) {logger.info("输入的数值有问题qwq");return "";}
+
+    public String civilWarRandomWeapon(int frontCourt,int middleCourt,int backCourt){
+        if(frontCourt+middleCourt+backCourt!=4) {info("输入的数值有问题qwq");return "";}
         int weaponNum=frontCourt+middleCourt+backCourt;
         String out ="./images/imagesBackground/randomWeapon.png";
         String yteam[] =new String[4];

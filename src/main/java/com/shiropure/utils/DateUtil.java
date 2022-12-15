@@ -1,9 +1,6 @@
 package com.shiropure.utils;
 
 
-import com.shiropure.config.RobotConfig;
-
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -29,8 +26,7 @@ public class DateUtil {
         ZoneId zoneId = ZoneId.of("UTC");
         LocalDateTime dateTime = LocalDateTime.parse(DateTimeStr, pattern);
         ZoneOffset offset = zoneId.getRules().getOffset(dateTime);
-        OffsetDateTime offsetDateTime = OffsetDateTime.of(dateTime, offset);
-        return offsetDateTime;
+        return OffsetDateTime.of(dateTime, offset);
     }
     public static String HHformater(int str)
     {

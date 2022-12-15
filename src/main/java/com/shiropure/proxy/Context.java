@@ -34,9 +34,9 @@ public class Context {
 
     /**
      * 设置参数，这将在 handler 之间传递
-     * @param key
-     * @param val
-     * @return
+     * @param key 参数的key
+     * @param val 参数内容
+     * @return Context对象
      */
     public Context set(String key, Object val) {
         params.put(key, val);
@@ -45,8 +45,8 @@ public class Context {
 
     /**
      * 获取参数
-     * @param key
-     * @return
+     * @param key 参数对象的key
+     * @return 对象
      */
     public Object get(String key) {
         return params.get(key);
@@ -54,8 +54,8 @@ public class Context {
 
     /**
      * 在执行列表末尾添加一个 handler
-     * @param handler
-     * @return
+     * @param handler 尾部添加handler
+     * @return Context对象
      */
     public Context addHandler(MessageEventHandler handler) {
         handlerList.add(handler);
@@ -64,8 +64,8 @@ public class Context {
 
     /**
      * 将 handler 添加至当前 handler 的下一个位置
-     * @param handler
-     * @return
+     * @param handler 之后添加一个handler
+     * @return Context对象
      */
     public Context addHandlerToNext(MessageEventHandler handler) {
         handlerList.add(index + 1, handler);
@@ -78,7 +78,7 @@ public class Context {
 
     /**
      * 执行处理消息逻辑，一旦一个 handler 对此事件感兴趣（shouldHandle 返回 true），那么此事件就会交由该 handler 执行，execute 方法会立即将 hanlder 的回复信息发送出去，<strong>此事件不会再交由其他 handler 执行，但这不是绝对的， handler 可以在 {@link MessageEventHandler#handleMessageEvent} 方法中显式的调用 {@link #continueExecute()}} 方法以表明希望能够继续处理下一个 handler</strong>
-     * @param event
+     * @param event 事件
      */
     public void execute(MessageEvent event) {
         execute = true;

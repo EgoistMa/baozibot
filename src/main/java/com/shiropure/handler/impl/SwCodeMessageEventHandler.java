@@ -1,7 +1,5 @@
 package com.shiropure.handler.impl;
 
-import com.shiropure.Model.Schedules.SplatoonSchedules;
-import com.shiropure.api.SplatoonSchedulesApi;
 import com.shiropure.handler.handler;
 import com.shiropure.proxy.Context;
 import net.mamoe.mirai.event.events.MessageEvent;
@@ -29,18 +27,18 @@ public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
-            logger.info("message handled by baoziBot");
+            info("message handled by baoziBot");
             String content = getPlantContent(event);
             if(content.startsWith(formateCommand(regCode))) {
-                logger.info("注册sw码");
+                info("注册sw码");
                 return regSwCode(event);
             }
             if(content.startsWith(formateCommand(getCode))) {
-                logger.info("获取sw码");
+                info("获取sw码");
                 return getSwCode(event);
             }
             if(content.startsWith(formateCommand(delCode))) {
-                logger.info("删除sw码");
+                info("删除sw码");
                 return delSwCode(event);
                 //return buildMessageChainAsSingletonList("删除功能暂不可用，后续修复");
             }
@@ -50,7 +48,7 @@ public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
         }
         return buildMessageChainAsSingletonList("发生了意料之外、情理之中的错误：not implement error");
     }
-    public static HashMap<String,String> loadCodes() throws IOException {
+    public static HashMap<String,String> loadCodes(){
         HashMap outMap;
         try
         {
@@ -71,8 +69,14 @@ public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
             return null;
         }
     }
-    public static void saveCodes() throws IOException{
+    public static void saveCodes(){
         try{
+            File file = new File("./assets/SWCodes.data");
+            if(! file.exists())
+            {
+                file.getParentFile().mkdir();
+                file.createNewFile();
+            }
             FileOutputStream fos =
                     new FileOutputStream("./assets/SWCodes.data");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -89,7 +93,7 @@ public class SwCodeMessageEventHandler extends GroupMessageEventHandler{
         saveCodes();
         return "馒头更新了你的sw码哦";
     }
-    public static String swReadCode (String qq) throws IOException {
+    public static String swReadCode (String qq){
         String code = swCodes.get(qq);
         return qq == null ? "馒头不知道你的sw码哦" : code;
     }

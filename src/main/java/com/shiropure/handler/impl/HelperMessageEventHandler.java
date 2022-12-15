@@ -1,7 +1,5 @@
 package com.shiropure.handler.impl;
 
-import com.shiropure.Model.Schedules.SplatoonSchedules;
-import com.shiropure.api.SplatoonSchedulesApi;
 import com.shiropure.handler.handler;
 import com.shiropure.proxy.Context;
 import net.mamoe.mirai.event.events.MessageEvent;
@@ -24,10 +22,10 @@ public class HelperMessageEventHandler extends GroupMessageEventHandler {
     }
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
-            logger.info("message handled by baoziBot");
+            info("message handled by baoziBot");
             String content = getPlantContent(event);
             if(content.startsWith(HELP)) {
-                logger.info("帮助");
+                info("帮助");
                 return getHelp(event);
             }
         } catch (Exception e) {
@@ -45,7 +43,6 @@ public class HelperMessageEventHandler extends GroupMessageEventHandler {
         //回复消息构造器
         List<MessageChain> ans = new ArrayList<>();
         MessageChainBuilder mc= new MessageChainBuilder();
-        //logger.info(subCommand);
         if(subCommand.equals("HELP") || subCommand.equals("帮助"))
         {
             mc.append(
@@ -72,7 +69,7 @@ public class HelperMessageEventHandler extends GroupMessageEventHandler {
             ans.add(mc.build());
             return ans;
         }else{
-            logger.info("未知的子命令， 忽略消息，请尝试 #help");
+            info("未知的子命令， 忽略消息，请尝试 #help");
             return null;
         }
     }

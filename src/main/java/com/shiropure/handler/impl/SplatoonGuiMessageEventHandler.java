@@ -19,9 +19,6 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import static com.shiropure.utils.DateUtil.HHformater;
@@ -38,7 +35,6 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     public final String SHOP = "商店";
     private Set<String> keywords;
     public SplatoonGuiMessageEventHandler() {
-        //aa
         keywords = new HashSet<>(16);
         keywords.add(formateCommand(TUDI));
         keywords.add(formateCommand(ZHENGE));
@@ -51,31 +47,31 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
-            logger.info("message handled by baoziBot");
+            info("message handled by baoziBot");
             SplatoonSchedules schedules = SplatoonSchedulesApi.SplatoonSchedules();
             String content = getPlantContent(event);
             if (content.startsWith(formateCommand(TUDI))) {
-                logger.info("涂地模式查询");
+                info("涂地模式查询");
                 return tuDI(event, schedules);
             }
             if (content.startsWith(formateCommand(ZHENGE))) {
-                logger.info("真格模式查询");
+                info("真格模式查询");
                 return zhenGe(event, schedules);
             }
             if (content.startsWith(formateCommand(XMODE))) {
-                logger.info("X模式查询");
+                info("X模式查询");
                 return X(event, schedules);
             }
             if (content.startsWith(formateCommand(ZUPAI))) {
-                logger.info("组排模式查询");
+                info("组排模式查询");
                 return zuPai(event, schedules);
             }
             if (content.startsWith(formateCommand(COOP))) {
-                logger.info("鲑鱼跑模式查询");
+                info("鲑鱼跑模式查询");
                 return coop(event, schedules);
             }
             if (content.startsWith(formateCommand(SHOP))) {
-                logger.info("商店查询");
+                info("商店查询");
                 return shop(event);
             }
         } catch (Exception e) {
@@ -87,8 +83,9 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
 
     private List<MessageChain> shop(MessageEvent event) throws IOException {
         Shop shop = SplatoonGearApi.GearShop();
-        //String imagePath = ImageUtil.mapImgGenerator(shop);
-        return null;//sendImage(imagePath,event);
+        String imagePath = ImageUtil.shopImg(shop);
+        info(imagePath);
+        return sendImage(imagePath,event);
     }
 
     private List<MessageChain> zuPai(MessageEvent event, SplatoonSchedules schedules) throws IOException {
@@ -121,19 +118,15 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         String subcommand = content.substring(formateCommand(COOP).length()).trim();
         int index = getIndex(subcommand);
         Schedules[] coopSchedules = schedules.coopGroupingSchedule;
-        String time = "";
-        time += coopSchedules[index].startTime.getMonthValue() +"/" +coopSchedules[index].startTime.getDayOfMonth()+" ";
-        time += HHformater(coopSchedules[index].startTime.plusHours(8).getHour()) +":00-";
-        time += "->";
-        time += coopSchedules[index].endTime.getMonthValue() +"/" +coopSchedules[index].endTime.getDayOfMonth()+" ";
-        time += HHformater(coopSchedules[index].endTime.plusHours(8).getHour()) +":00";
+        String startTime = "";
+        startTime += coopSchedules[index].startTime.getMonthValue() +"/" +coopSchedules[index].startTime.getDayOfMonth()+" ";
+        startTime += HHformater(coopSchedules[index].startTime.plusHours(8).getHour()) +":00";
+        String endTime = "";
+        endTime += coopSchedules[index].endTime.getMonthValue() +"/" +coopSchedules[index].endTime.getDayOfMonth()+" ";
+        endTime += HHformater(coopSchedules[index].endTime.plusHours(8).getHour()) +":00";
         String mapName = translateStage(coopSchedules[index].getStages()[0].stageName);
         String mapUrl = coopSchedules[index].getStages()[0].stageUrl;
-        LinkedList<String> weapons = new LinkedList<>();
-        for (Weapon weapon:coopSchedules[index].weapons) {
-            weapons.addLast(translateWeapon(weapon.getWeaponName()));
-        }
-        // 临时文字版
+        /* 临时文字版
         MessageChainBuilder mc= new MessageChainBuilder();
         StringBuilder sb = new StringBuilder();
         List<MessageChain> ans = new ArrayList<>();
@@ -151,6 +144,18 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         mc.append(sb);
         ans.add(mc.build());
         return ans;
+        */
+        HashMap<String,String> map = new HashMap<>();
+        map.put("startTime",startTime);
+        map.put("endTime",endTime);
+        map.put("name",mapName);
+        map.put("url",mapUrl);
+        map.put("weapon1",coopSchedules[index].weapons[0].getWeaponUrl());
+        map.put("weapon2",coopSchedules[index].weapons[1].getWeaponUrl());
+        map.put("weapon3",coopSchedules[index].weapons[2].getWeaponUrl());
+        map.put("weapon4",coopSchedules[index].weapons[3].getWeaponUrl());
+        String imagePath = ImageUtil.salmonRun(map);
+        return sendImage(imagePath,event);
     }
 
     private List<MessageChain> X(MessageEvent event, SplatoonSchedules schedules) throws IOException {
@@ -209,7 +214,7 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         map.put("rule1",rule1);
         map.put("rule2",rule2);
         String imagePath = ImageUtil.mapImgGenerator(map,"bankara");
-        logger.info("包子功能完成");
+        info("包子功能完成");
         //上传生成文件，并发送
         return sendImage(imagePath,event);
     }
@@ -235,21 +240,13 @@ public class SplatoonGuiMessageEventHandler extends GroupMessageEventHandler {
         map.put("url1",url1);
         map.put("url2",url2);
         String imagePath = ImageUtil.mapImgGenerator(map,"regular");
-        logger.info("包子功能完成");
+        info("包子功能完成");
         //上传生成文件，并发送
         return sendImage(imagePath,event);
     }
     public int getIndex(String command)
     {
         return Math.max(command.length()-1, 0);
-    }
-    public List<MessageChain> sendImage(String path,MessageEvent event) throws IOException {
-        List<MessageChain> ans = new ArrayList<>();
-        ExternalResource res = ExternalResource.create(new File(path));
-        Image image = event.getSubject().uploadImage(res);
-        res.close();
-        ans.add(new MessageChainBuilder().append(image).build());
-        return ans;
     }
     public boolean shouldHandle(MessageEvent event, Context ctx) {
         return startWithKeywords(event,keywords);

@@ -40,27 +40,27 @@ public class SplatoonMessageEventHandler extends GroupMessageEventHandler {
     @Override
     public List<MessageChain> handleMessageEvent(MessageEvent event, Context ctx) {
         try {
-            logger.info("message handled by baoziBot");
+            info("message handled by baoziBot");
             SplatoonSchedules schedules = SplatoonSchedulesApi.SplatoonSchedules();
             String content = getPlantContent(event);
             if(content.startsWith(stringFormateCommand(TUDI))) {
-                logger.info("涂地模式查询");
+                info("涂地模式查询");
                 return tuDI(event,schedules);
             }
             if(content.startsWith(stringFormateCommand(ZHENGE))) {
-                logger.info("真格模式查询");
+                info("真格模式查询");
                 return zhenGe(event,schedules);
             }
             if(content.startsWith(stringFormateCommand(XMODE))) {
-                logger.info("X模式查询");
+                info("X模式查询");
                 return XMoShi(event,schedules);
             }
             if(content.startsWith(stringFormateCommand(ZUPAI))) {
-                logger.info("组排模式查询");
+                info("组排模式查询");
                 return zuPai(event,schedules);
             }
             if(content.startsWith(stringFormateCommand(COOP))) {
-                logger.info("鲑鱼跑模式查询");
+                info("鲑鱼跑模式查询");
                 return coop(event,schedules);
             }
 

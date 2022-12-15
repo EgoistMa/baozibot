@@ -1,10 +1,9 @@
 package com.shiropure.utils;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class SplatoonUtil {
-    static HashMap<String, String> stage = new HashMap<String, String>() {
+    static final HashMap<String, String> stage = new HashMap<String, String>() {
         {
             put("Scorch Gorge", "温泉花大峡谷");
             put("Eeltail Alley", "鳗鲶区");
@@ -26,7 +25,7 @@ public class SplatoonUtil {
             put("Flounder Heights", "比目鱼住宅区");
         }
     };
-    static HashMap<String, String> rule = new HashMap<String, String>() {
+    static final HashMap<String, String> rule = new HashMap<String, String>() {
         {
             put("Turf War", "占地对战");
             put("Tower Control", "真格塔楼");
@@ -35,7 +34,7 @@ public class SplatoonUtil {
             put("Clam Blitz", "真格蛤蜊");
         }
     };
-    static HashMap<String, String> weapons = new HashMap<String, String>() {
+    static final HashMap<String, String> weapons = new HashMap<String, String>() {
         {
             put("Aerospray MG","专业模型枪MG");
             put("Carbon Roller","碳纤维滚筒");
@@ -95,7 +94,7 @@ public class SplatoonUtil {
             put("Snipewriter 5H","R-PEN/5H");
         }
     };
-    static HashMap<String, String> brands = new HashMap<String, String>() {
+    static final HashMap<String, String> brands = new HashMap<String, String>() {
         {
             put("Splash Mob","寺门");
             put("Barazushi","散寿司");
@@ -116,7 +115,7 @@ public class SplatoonUtil {
             put("Annaki","无法无天");
         }
     };
-    static HashMap<String, String> gears = new HashMap<String, String>() {
+    static final HashMap<String, String> gears = new HashMap<String, String>() {
         {
             put("Classic Bowler","经典圆顶礼帽");
             put("White Shirt","白色衬衫");
@@ -300,7 +299,7 @@ public class SplatoonUtil {
             put("Octo Tackle Helmet Deco","装饰奖章鱼安全帽");
         }
     };
-    static HashMap<String, String> powers = new HashMap<String, String>() {
+    static final HashMap<String, String> powers = new HashMap<String, String>() {
         {
 
             put("Ink Saver (Main)","提升墨汁效率（主要武器）");

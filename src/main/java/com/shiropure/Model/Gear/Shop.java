@@ -1,7 +1,5 @@
 package com.shiropure.Model.Gear;
 
-import java.time.OffsetDateTime;
-
 public class Shop {
     public PickupBrand pickupBrand;
     public GearOffer[] limitedGears;

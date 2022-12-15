@@ -15,8 +15,8 @@ import java.util.*;
 import static com.shiropure.utils.IOUtil.*;
 
 public class SplatoonSchedulesApi {
-    static String schedulesApi = "https://splatoon3.ink/data/schedules.json";
-    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    static final String schedulesApi = "https://splatoon3.ink/data/schedules.json";
+    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     /**
      * 提取并对象化根据 schedulesApi 获取的json文件
      *
@@ -25,7 +25,7 @@ public class SplatoonSchedulesApi {
     public static SplatoonSchedules SplatoonSchedules() throws IOException
     {
         OffsetDateTime currentTime = OffsetDateTime.now();
-        String filePath = "./Caches/schedules"+currentTime.getHour()+".data";
+        String filePath = "./Caches/schedules/"+currentTime.getHour()+".data";
         Map<String, Object> dataMap = getCacheOrDownloadfromApi(filePath,schedulesApi);
 
         Schedules[] regularSchedules = readRegularSchedules(dataMap);

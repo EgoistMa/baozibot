@@ -35,7 +35,7 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     /**
      * 记录 info 日志，输出至控制台
      *
-     * @param msg
+     * @param msg 输出内容
      */
     public void info(String msg) {
         logger.info(msg);
@@ -44,7 +44,7 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     /**
      * 记录 debug 日志，输出至控制台
      *
-     * @param msg
+     * @param msg 输出内容
      */
     public void debug(String msg) {
         logger.debug(msg);
@@ -54,7 +54,7 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     /**
      * 记录 error 日志，输出至控制台
      *
-     * @param msg
+     * @param msg 输出内容
      */
     public void error(String msg) {
         logger.error(msg);
@@ -64,7 +64,7 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     /**
      * 记录 error 日志，输出至错误文件
      *
-     * @param msg
+     * @param msg 输出内容
      */
     public void logError(MessageEvent event, String msg) {
         recordFailLog(event, msg);
@@ -105,9 +105,9 @@ public abstract class AbstractMessageEventHandler extends RobotUtil implements M
     /**
      * 检查事件消息是否以关键字开头
      *
-     * @param event
-     * @param keywords
-     * @return
+     * @param event 传入的事件
+     * @param keywords 是否包含集合关键字
+     * @return 此事件是否以集合内的关键字开始
      */
     public boolean startWithKeywords(MessageEvent event, Collection<String> keywords) {
         String content = getPlantContent(event);

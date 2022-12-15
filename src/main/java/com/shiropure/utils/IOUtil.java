@@ -6,6 +6,7 @@ import com.shiropure.config.RobotConfig;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class IOUtil {
             HttpURLConnection conn = getUrlConnection(obj, method, heads, postParam, timeout);
             return conn.getInputStream();
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
@@ -53,7 +55,7 @@ public class IOUtil {
             HttpURLConnection conn = getUrlConnection(obj, method, heads, postParam, timeout);
             int code = conn.getResponseCode();
             String msg = "";
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     msg += line + "\n";
@@ -67,6 +69,7 @@ public class IOUtil {
             map.put("code", code);
             return map;
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
@@ -108,7 +111,7 @@ public class IOUtil {
     public static String sendAndGetResponseString(URL obj, String method, Map<String, String> heads, String postParam, long timeout) throws IOException {
         HttpURLConnection conn = getUrlConnection(obj, method, heads, postParam, timeout);
         StringBuilder msg = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 msg.append(line).append("\n");
@@ -134,62 +137,40 @@ public class IOUtil {
      *
      * @param file
      * @param message
-     * @throws FileNotFoundException
      */
-    public synchronized static void writeToFile(File file, String message, boolean append) throws FileNotFoundException {
+    public synchronized static void writeToFile(File file, String message, boolean append){
         try (FileOutputStream out = new FileOutputStream(file, append)) {
             out.write(message.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private static String[] getFolderAndFileName(String path)
-    {
-        StringBuilder sb = new StringBuilder();
-        path = path.substring(2);
-        String[] paths = path.split("/");
-        for (int i = 0;i<paths.length - 1;i++) {
-            sb.append(paths[i]);
-        }
-        String[] out = new String[2];
-        out[0] = sb.toString();
-        out[1] = paths[paths.length-1];
-        return out;
-    }
-    public static void createFile(String path) throws IOException {
-        String[] paths = getFolderAndFileName(path);
-        File file = new File(paths[0]);
-        if(!file.exists())
+    public static Map<String, Object> getCacheOrDownloadfromApi(String filePath,String apiUrl) throws IOException {
+        Map<String, Object> dataMap ;
+        File file = new File(filePath);
+        if(file.exists())
         {
-            file.mkdir();
-        }
-        file = new File(path);
-        if(!file.exists()) {
-            file.createNewFile();
-        }
-    }
-    public static void removeAllFiles(String path)
-    {
-        File[] files = new File(path).listFiles();
-        if(files != null)
+            RobotConfig.logger.info("从缓存中载入对象....");
+            //load
+            dataMap = loadObjectFromFile(filePath);
+        }else
         {
-            for (File file: files) {
-                removeFile(file.getPath());
-            }
+            RobotConfig.logger.info("从api下载并保存至本地");
+            //删除文件夹内所有文件
+            removeAllFiles(file.getParentFile());
+            dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(apiUrl), "GET", null, null).get("data");
+            saveObjectToFile(dataMap , file);
         }
+        return  dataMap;
     }
-    public static void removeFile(String path)
-    {
-        new File(path).delete();
-    }
-    public static void saveObjectToFile(Map<String, Object> dataMap, String filePath) throws IOException{
+    public static void saveObjectToFile(Map<String, Object> dataMap,File file){
         try{
-            if(!new File(filePath).exists())
+            if(!file.exists())
             {
-                createFile(filePath);
+                createFile(file);
             }
             FileOutputStream fos =
-                    new FileOutputStream(filePath);
+                    new FileOutputStream(file.getPath());
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(dataMap);
             oos.close();
@@ -199,7 +180,7 @@ public class IOUtil {
             e.printStackTrace();
         }
     }
-    public static Map<String, Object> loadObjectFromFile(String filePath) throws IOException {
+    public static Map<String, Object> loadObjectFromFile(String filePath){
         Map<String, Object> outMap;
         try
         {
@@ -220,22 +201,27 @@ public class IOUtil {
             return null;
         }
     }
-    public static Map<String, Object> getCacheOrDownloadfromApi(String filePath,String apiUrl) throws IOException {
-        Map<String, Object> dataMap ;
-        File file = new File(filePath);
-        if(file.exists())
+    public static void createFile(File file) {
+        try{
+            // 如果文件所在的目录不存在，则创建目录
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            // 创建文件
+            file.createNewFile();
+        }catch (Exception e)
         {
-            RobotConfig.logger.info("从缓存中载入schedules....");
-            //load
-            dataMap = loadObjectFromFile(filePath);
-        }else
-        {
-            RobotConfig.logger.info("下载schedules并保存至本地");
-            //删除文件夹内所有文件
-            removeAllFiles("./schedulesCaches");
-            dataMap = (Map<String, Object>) IOUtil.sendAndGetResponseMap(new URL(apiUrl), "GET", null, null).get("data");
-            saveObjectToFile(dataMap , filePath);
+            e.printStackTrace();
         }
-        return  dataMap;
+    }
+    private static void removeAllFiles(File parentFile) {
+        File[] files = parentFile.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            file.delete();
+        }
     }
 }

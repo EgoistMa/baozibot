@@ -14,13 +14,13 @@ import static com.shiropure.utils.SplatoonApiUtil.openNode;
 import static com.shiropure.utils.SplatoonApiUtil.openNodeList;
 
 public class SplatoonGearApi {
-    static String gearApi = "https://splatoon3.ink/data/gear.json";
+    static final String gearApi = "https://splatoon3.ink/data/gear.json";
 
-    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public static Shop GearShop() throws IOException {
         OffsetDateTime currentTime = OffsetDateTime.now();
-        String filePath = "./Caches/gear"+currentTime.getHour()+".data";
+        String filePath = "./Caches/gear/"+currentTime.getHour()+".data";
         Map<String, Object> dataMap = getCacheOrDownloadfromApi(filePath,gearApi);
         dataMap = openNode(dataMap,"gesotown");
         PickupBrand pickupBrand = ReadPickupBrand(dataMap);

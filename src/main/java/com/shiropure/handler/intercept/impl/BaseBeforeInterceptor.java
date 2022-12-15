@@ -11,8 +11,8 @@ public class BaseBeforeInterceptor extends AdaptInterceptor {
 
     /**
      * 返回真则拦截该事件
-     * @param event
-     * @return
+     * @param event 消息事件
+     * @return 是否要拦截
      */
     @Override
     public boolean interceptBefore(MessageEvent event) {
